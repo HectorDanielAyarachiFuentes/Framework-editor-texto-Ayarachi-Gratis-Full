@@ -37,15 +37,16 @@
             });
 
             // --- FUNCIÓN AUXILIAR PARA ENCONTRAR ELEMENTOS PADRE ---
-            const findParentTag = (tagName) => {
+            const findParentTag = (tagName, rootNode = document.body) => {
                 const selection = window.getSelection();
                 if (!selection.rangeCount) return null;
                 let node = selection.getRangeAt(0).startContainer;
                 let element = node.nodeType === 3 ? node.parentNode : node;
-                while (element && element.tagName !== tagName) {
+                while (element && element !== rootNode && element.tagName !== tagName.toUpperCase()) {
                     element = element.parentNode;
+                    if (!rootNode.contains(element)) return null; // No salir del editor
                 }
-                return element;
+                return (element && element.tagName === tagName.toUpperCase()) ? element : null;
             };
 
             // --- LÓGICA DE ACCIONES ESPECÍFICAS ---
@@ -119,17 +120,23 @@
                 applyStyle: (element) => {
                     const style = element.dataset.style;
                     if (!style) return;
-
-                    // Para estilos de bloque como títulos o código
-                    if (style === 'title' || style === 'subtitle' || style === 'code') {
-                        executeCommand('formatBlock', '<div>'); // Envuelve la selección en un div
-                        const selection = window.getSelection();
-                        if (selection.rangeCount > 0) {
-                            let container = selection.getRangeAt(0).commonAncestorContainer;
-                            // Busca el div recién creado
-                            let div = container.nodeType === 1 ? container : container.parentNode;
-                            while(div && div.tagName !== 'DIV') div = div.parentNode;
-                            if (div) div.className = `style-${style}`;
+            
+                    // Usamos formatBlock para asegurar que la selección esté en un párrafo o div.
+                    executeCommand('formatBlock', '<p>');
+            
+                    const selection = window.getSelection();
+                    if (selection.rangeCount > 0) {
+                        let container = selection.getRangeAt(0).startContainer;
+                        let blockElement = container.nodeType === 3 ? container.parentNode : container;
+            
+                        // Busca el elemento de bloque más cercano (P, DIV, H1, etc.) dentro del editor
+                        while (blockElement && blockElement !== editor && !['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(blockElement.tagName)) {
+                            blockElement = blockElement.parentNode;
+                        }
+            
+                        if (blockElement && editor.contains(blockElement)) {
+                            // Si el estilo ya está aplicado, lo quitamos. Si no, lo aplicamos.
+                            blockElement.classList.toggle(`style-${style}`);
                         }
                     }
                 }
@@ -140,7 +147,7 @@
                     e.preventDefault();
                     const action = element.dataset.action;
                     if (actionHandlers[action]) {
-                        actionHandlersaction; // Pasamos el elemento para leer data-attributes
+                        actionHandlers[action](element); // Pasamos el elemento para leer data-attributes
                     }
                     closeAllMenus();
                 });
