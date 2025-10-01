@@ -71,6 +71,15 @@
                     <a href="#" class="dropdown-item" data-command="removeFormat"><div><i class="fa-solid fa-text-slash"></i> Limpiar formato</div></a>
                 </div>
             </div>
+            <!-- Menú Estilos -->
+            <div class="menu-item">
+                <span class="menu-button">Estilos</span>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-action="applyStyle" data-style="title"><div>Título Destacado</div></a>
+                    <a href="#" class="dropdown-item" data-action="applyStyle" data-style="subtitle"><div>Subtítulo Gris</div></a>
+                    <a href="#" class="dropdown-item" data-action="applyStyle" data-style="code"><div>Bloque de Código</div></a>
+                </div>
+            </div>
             <!-- Menú Herramientas -->
             <div class="menu-item">
                 <span class="menu-button">Herramientas</span>
@@ -90,6 +99,9 @@
                             <div class="table-grid-size" id="tableGridSize">0x0</div>
                         </div>
                     </div>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-action="deleteTableRow"><div><i class="fa-solid fa-delete-left"></i> Eliminar fila</div></a>
+                    <a href="#" class="dropdown-item" data-action="deleteTableColumn"><div><i class="fa-solid fa-table-columns"></i> Eliminar columna</div></a>
                     <hr>
                     <a href="#" class="dropdown-item" data-action="deleteTable"><div><i class="fa-regular fa-trash-can"></i> Eliminar tabla</div></a>
                 </div>
@@ -130,6 +142,17 @@
                 <option value="6">24pt</option>
                 <option value="7">36pt</option>
             </select>
+
+            <div class="toolbar-separator"></div>
+
+            <div class="toolbar-color-picker" title="Color de texto">
+                <i class="fa-solid fa-font"></i>
+                <input type="color" data-command="foreColor" value="#000000">
+            </div>
+            <div class="toolbar-color-picker" title="Color de resaltado">
+                <i class="fa-solid fa-highlighter"></i>
+                <input type="color" data-command="hiliteColor" value="#FFFFFF">
+            </div>
 
             <button class="toolbar-button" data-command="bold" title="Negrita"><i class="fa-solid fa-bold"></i></button>
             <button class="toolbar-button" data-command="italic" title="Cursiva"><i class="fa-solid fa-italic"></i></button>

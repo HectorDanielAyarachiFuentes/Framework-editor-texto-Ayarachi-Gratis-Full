@@ -29,6 +29,25 @@
                 executeCommand('fontSize', this.value);
             });
 
+            document.querySelectorAll('input[type="color"][data-command]').forEach(input => {
+                input.addEventListener('input', () => {
+                    const command = input.dataset.command;
+                    executeCommand(command, input.value);
+                });
+            });
+
+            // --- FUNCIÓN AUXILIAR PARA ENCONTRAR ELEMENTOS PADRE ---
+            const findParentTag = (tagName) => {
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return null;
+                let node = selection.getRangeAt(0).startContainer;
+                let element = node.nodeType === 3 ? node.parentNode : node;
+                while (element && element.tagName !== tagName) {
+                    element = element.parentNode;
+                }
+                return element;
+            };
+
             // --- LÓGICA DE ACCIONES ESPECÍFICAS ---
             const actionHandlers = {
                 newDocument: () => {
@@ -63,14 +82,32 @@
                     const charCount = text.length;
                     alert(`Conteo de palabras: ${words.length}\nConteo de caracteres: ${charCount}`);
                 },
-                deleteTable: () => {
-                    const selection = window.getSelection();
-                    if (!selection.rangeCount) return;
-                    let node = selection.getRangeAt(0).startContainer;
-                    let table = node.nodeType === 3 ? node.parentNode : node;
-                    while (table && table.tagName !== 'TABLE') {
-                        table = table.parentNode;
+                deleteTableRow: () => {
+                    const row = findParentTag('TR');
+                    if (row) {
+                        row.parentNode.removeChild(row);
+                    } else {
+                        alert('Por favor, coloca el cursor en la fila que deseas eliminar.');
                     }
+                },
+                deleteTableColumn: () => {
+                    const cell = findParentTag('TD') || findParentTag('TH');
+                    if (cell) {
+                        const cellIndex = cell.cellIndex;
+                        const table = findParentTag('TABLE');
+                        if (table) {
+                            for (const row of table.rows) {
+                                if (row.cells[cellIndex]) {
+                                    row.deleteCell(cellIndex);
+                                }
+                            }
+                        }
+                    } else {
+                        alert('Por favor, coloca el cursor en la columna que deseas eliminar.');
+                    }
+                },
+                deleteTable: () => {
+                    const table = findParentTag('TABLE');
                     if (table) {
                         if (confirm('¿Estás seguro de que quieres eliminar esta tabla?')) {
                             table.parentNode.removeChild(table);
@@ -79,6 +116,23 @@
                         alert('Por favor, coloca el cursor dentro de una tabla para eliminarla.');
                     }
                 },
+                applyStyle: (element) => {
+                    const style = element.dataset.style;
+                    if (!style) return;
+
+                    // Para estilos de bloque como títulos o código
+                    if (style === 'title' || style === 'subtitle' || style === 'code') {
+                        executeCommand('formatBlock', '<div>'); // Envuelve la selección en un div
+                        const selection = window.getSelection();
+                        if (selection.rangeCount > 0) {
+                            let container = selection.getRangeAt(0).commonAncestorContainer;
+                            // Busca el div recién creado
+                            let div = container.nodeType === 1 ? container : container.parentNode;
+                            while(div && div.tagName !== 'DIV') div = div.parentNode;
+                            if (div) div.className = `style-${style}`;
+                        }
+                    }
+                }
             };
 
             document.querySelectorAll('[data-action]').forEach(element => {
@@ -86,7 +140,7 @@
                     e.preventDefault();
                     const action = element.dataset.action;
                     if (actionHandlers[action]) {
-                        actionHandlers[action]();
+                        actionHandlersaction; // Pasamos el elemento para leer data-attributes
                     }
                     closeAllMenus();
                 });
@@ -119,12 +173,17 @@
             const gridPicker = document.getElementById('tableGridPicker');
             const gridSizeDisplay = document.getElementById('tableGridSize');
             if (gridPicker) {
-                for (let i = 0; i < 100; i++) { // 10x10 grid
-                    const cell = document.createElement('div');
-                    cell.dataset.row = Math.floor(i / 10);
-                    cell.dataset.col = i % 10;
-                    gridPicker.appendChild(cell);
+                // Creación de la cuadrícula de forma más declarativa
+                const gridFragment = document.createDocumentFragment();
+                for (let i = 0; i < 10; i++) { // Filas
+                    for (let j = 0; j < 10; j++) { // Columnas
+                        const cell = document.createElement('div');
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                        gridFragment.appendChild(cell);
+                    }
                 }
+                gridPicker.appendChild(gridFragment);
 
                 gridPicker.addEventListener('mouseover', e => {
                     if (e.target.dataset.row) {
