@@ -287,6 +287,29 @@
             background-size: 5px auto, 8px auto, 12px auto; /* Ancho de cada tipo de marca */
         }
 
+        /* Contenedores para los números de las reglas */
+        .ruler-numbers-h, .ruler-numbers-v {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ruler-numbers-h span, .ruler-numbers-v span {
+            position: absolute;
+            color: #555;
+            font-size: 10px;
+        }
+
+        .ruler-numbers-h span {
+            top: 2px;
+        }
+
+        .ruler-numbers-v span {
+            left: 4px;
+        }
+
         /* Esquina superior izquierda entre las reglas */
         .ruler-h::before {
             content: '';

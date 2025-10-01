@@ -2,6 +2,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             const editor = document.getElementById('editor');
 
+            // --- INICIALIZACIÓN DE LAS REGLAS ---
+            initRulers();
+
             // --- FUNCIONES BÁSICAS DEL EDITOR ---
             const executeCommand = (command, value = null) => {
                 document.execCommand(command, false, value);
@@ -264,4 +267,59 @@
                     closeAllMenus();
                 }
             });
+
+            // --- LÓGICA DE LAS REGLAS CON NÚMEROS ---
+            function initRulers() {
+                const rulerH = document.querySelector('.ruler-h');
+                const rulerV = document.querySelector('.ruler-v');
+                const numbersH = document.querySelector('.ruler-numbers-h');
+                const numbersV = document.querySelector('.ruler-numbers-v');
+                const editor = document.getElementById('editor');
+
+                const drawRulers = () => {
+                    // Limpiar números existentes
+                    numbersH.innerHTML = '';
+                    numbersV.innerHTML = '';
+
+                    // Dibujar regla horizontal
+                    const editorWidth = editor.scrollWidth;
+                    for (let i = 100; i < editorWidth; i += 100) {
+                        const number = document.createElement('span');
+                        number.textContent = i;
+                        number.style.left = `${i}px`;
+                        numbersH.appendChild(number);
+                    }
+
+                    // Dibujar regla vertical
+                    const editorHeight = editor.scrollHeight;
+                    for (let i = 100; i < editorHeight; i += 100) {
+                        const number = document.createElement('span');
+                        number.textContent = i;
+                        number.style.top = `${i}px`;
+                        numbersV.appendChild(number);
+                    }
+                };
+
+                const syncRulers = () => {
+                    // Sincronizar posición de las marcas y números con el scroll del editor
+                    const scrollLeft = editor.scrollLeft;
+                    const scrollTop = editor.scrollTop;
+
+                    rulerH.style.backgroundPosition = `-${scrollLeft}px center, -${scrollLeft}px center, -${scrollLeft}px center`;
+                    numbersH.style.transform = `translateX(-${scrollLeft}px)`;
+
+                    rulerV.style.backgroundPosition = `center -${scrollTop}px, center -${scrollTop}px, center -${scrollTop}px`;
+                    numbersV.style.transform = `translateY(-${scrollTop}px)`;
+                };
+
+                // Dibujar reglas al inicio
+                drawRulers();
+
+                // Sincronizar al hacer scroll en el editor
+                editor.addEventListener('scroll', syncRulers);
+
+                // Redibujar si el contenido del editor cambia de tamaño (ej. al añadir una imagen grande)
+                const resizeObserver = new ResizeObserver(drawRulers);
+                resizeObserver.observe(editor);
+            }
         });
