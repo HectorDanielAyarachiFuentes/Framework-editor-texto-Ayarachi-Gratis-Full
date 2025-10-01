@@ -246,6 +246,11 @@
 
         .editor-body {
             display: flex;
+            background-color: #e9ecef; /* Fondo gris para el área que rodea la página */
+            padding: 20px 0;
+            justify-content: center;
+            overflow: auto;
+            max-height: 70vh; /* Limita la altura del scroll para ver la página completa */
         }
 
         /* ESTILOS PARA LAS REGLAS */
@@ -322,11 +327,40 @@
         /* ÁREA DEL EDITOR */
         .editor {
             padding: 20px;
-            min-height: 400px;
             outline: none;
             font-size: 16px;
             line-height: 1.6;
-            overflow-y: auto;
+            overflow-y: auto; /* Scroll interno si el contenido excede la página */
+            background-color: #fff;
+            /* Estilos por defecto (automático) */
+            width: 100%;
+            min-height: 400px;
+            box-sizing: border-box;
+        }
+
+        /* Estilos para cuando se aplica un tamaño de página */
+        .editor.page-view {
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+            border: 1px solid #ccc;
+            padding: 2.54cm; /* Margen estándar de 1 pulgada */
+            box-sizing: content-box; /* Importante para que el padding no se reste del width/height */
+            min-height: auto;
+            overflow: hidden; /* El scroll principal lo maneja editor-body */
+        }
+
+        /* Dimensiones de página (1cm ≈ 37.8px) */
+        .editor.page-A4 { width: 21cm; height: 29.7cm; }
+        .editor.page-Letter { width: 21.59cm; height: 27.94cm; }
+        .editor.page-Legal { width: 21.59cm; height: 35.56cm; }
+        .editor.page-A5 { width: 14.8cm; height: 21cm; }
+
+        /* Estilos de impresión para que coincidan con el tamaño de página */
+        @media print {
+            body { background-color: #fff; }
+            .editor-container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+            .menu-bar, .toolbar, .status-bar, .ruler-h, .ruler-v { display: none; }
+            .editor-body { display: block; padding: 0; max-height: none; }
+            .editor { box-shadow: none; border: none; width: auto; height: auto; overflow: visible; }
         }
 
         /* Estilos predefinidos para el contenido del editor */

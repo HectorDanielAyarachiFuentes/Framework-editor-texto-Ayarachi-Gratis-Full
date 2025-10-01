@@ -142,6 +142,15 @@
                             blockElement.classList.toggle(`style-${style}`);
                         }
                     }
+                },
+                setPageSize: (element) => {
+                    const size = element.dataset.size;
+                    // Limpiar clases de tamaño anteriores
+                    editor.classList.remove('page-view', 'page-A4', 'page-Letter', 'page-Legal', 'page-A5');
+                    if (size !== 'auto') {
+                        editor.classList.add('page-view');
+                        editor.classList.add(`page-${size}`);
+                    }
                 }
             };
 
