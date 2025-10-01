@@ -263,28 +263,28 @@
             height: 25px;
             border-bottom: 1px solid #ddd;
             padding-left: 25px; /* Espacio para la regla vertical */
-            /* Gradientes para simular marcas de regla centradas */
+            /* Gradientes para simular marcas de regla en CM (1cm ≈ 37.8px) */
             background-image:
-                repeating-linear-gradient(to right, #bbb, #bbb 1px, transparent 1px, transparent 10px),  /* Marcas pequeñas */
-                repeating-linear-gradient(to right, #888, #888 1px, transparent 1px, transparent 50px),  /* Marcas medianas */
-                repeating-linear-gradient(to right, #555, #555 1px, transparent 1px, transparent 100px); /* Marcas grandes */
+                repeating-linear-gradient(to right, #ccc, #ccc 1px, transparent 1px, transparent 3.78px),  /* Marcas de 1mm */
+                repeating-linear-gradient(to right, #999, #999 1px, transparent 1px, transparent 18.9px), /* Marcas de 0.5cm */
+                repeating-linear-gradient(to right, #555, #555 1px, transparent 1px, transparent 37.8px);  /* Marcas de 1cm */
             background-repeat: repeat-x;
             background-position: 0 center, 0 center, 0 center; /* Centra las marcas verticalmente */
-            background-size: auto 5px, auto 8px, auto 12px; /* Altura de cada tipo de marca */
+            background-size: auto 4px, auto 7px, auto 12px; /* Altura de cada tipo de marca */
         }
 
         .ruler-v {
             width: 25px;
             flex-shrink: 0;
             border-right: 1px solid #ddd;
-            /* Gradientes para simular marcas de regla centradas */
+            /* Gradientes para simular marcas de regla en CM (1cm ≈ 37.8px) */
             background-image:
-                repeating-linear-gradient(to bottom, #bbb, #bbb 1px, transparent 1px, transparent 10px),
-                repeating-linear-gradient(to bottom, #888, #888 1px, transparent 1px, transparent 50px),
-                repeating-linear-gradient(to bottom, #555, #555 1px, transparent 1px, transparent 100px);
+                repeating-linear-gradient(to bottom, #ccc, #ccc 1px, transparent 1px, transparent 3.78px),
+                repeating-linear-gradient(to bottom, #999, #999 1px, transparent 1px, transparent 18.9px),
+                repeating-linear-gradient(to bottom, #555, #555 1px, transparent 1px, transparent 37.8px);
             background-repeat: repeat-y;
             background-position: center 0, center 0, center 0; /* Centra las marcas horizontalmente */
-            background-size: 5px auto, 8px auto, 12px auto; /* Ancho de cada tipo de marca */
+            background-size: 4px auto, 7px auto, 12px auto; /* Ancho de cada tipo de marca */
         }
 
         /* Contenedores para los números de las reglas */

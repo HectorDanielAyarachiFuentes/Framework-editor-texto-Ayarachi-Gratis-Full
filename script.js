@@ -276,26 +276,29 @@
                 const numbersV = document.querySelector('.ruler-numbers-v');
                 const editor = document.getElementById('editor');
 
+                const PX_PER_CM = 37.795; // 96dpi / 2.54
+
                 const drawRulers = () => {
                     // Limpiar números existentes
                     numbersH.innerHTML = '';
                     numbersV.innerHTML = '';
 
                     // Dibujar regla horizontal
-                    const editorWidth = editor.scrollWidth;
-                    for (let i = 100; i < editorWidth; i += 100) {
+                    const editorWidthInCm = editor.scrollWidth / PX_PER_CM;
+                    for (let i = 1; i < editorWidthInCm; i++) {
                         const number = document.createElement('span');
                         number.textContent = i;
-                        number.style.left = `${i}px`;
+                        // Posiciona el número un poco a la derecha de la marca de 1cm
+                        number.style.left = `${(i * PX_PER_CM) + 2}px`;
                         numbersH.appendChild(number);
                     }
 
                     // Dibujar regla vertical
-                    const editorHeight = editor.scrollHeight;
-                    for (let i = 100; i < editorHeight; i += 100) {
+                    const editorHeightInCm = editor.scrollHeight / PX_PER_CM;
+                    for (let i = 1; i < editorHeightInCm; i++) {
                         const number = document.createElement('span');
                         number.textContent = i;
-                        number.style.top = `${i}px`;
+                        number.style.top = `${i * PX_PER_CM}px`;
                         numbersV.appendChild(number);
                     }
                 };
