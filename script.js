@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- INICIALIZACIÓN DE MARCADORES DE SANGRÍA ---
     initIndentMarkers();
 
+    // --- INICIALIZACIÓN DE MARCADORES DE MARGEN ---
+    initMarginMarkers();
+
     // --- FUNCIONES BÁSICAS DEL EDITOR ---
     const executeCommand = (command, value = null) => {
         document.execCommand(command, false, value);
@@ -149,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 editor.classList.add('page-view');
                 editor.classList.add(`page-${size}`);
             }
+            updateMarginMarkersPosition(); // Actualizar marcadores de margen al cambiar tamaño
         }
     };
 
@@ -516,5 +520,72 @@ document.addEventListener('DOMContentLoaded', () => {
                 marker.style.transform = `translateX(-${scrollLeft}px)`;
             });
         });
+    }
+
+    // --- LÓGICA DE MÁRGENES CON MARCADORES EN LA REGLA VERTICAL ---
+    function initMarginMarkers() {
+        const editor = document.getElementById('editor');
+        const editorBody = document.querySelector('.editor-body');
+        const topMarker = document.getElementById('margin-top');
+
+        window.updateMarginMarkersPosition = () => {
+            topMarker.style.display = 'block';
+            const editorStyle = window.getComputedStyle(editor);
+            const paddingTop = parseFloat(editorStyle.paddingTop) || 0;
+
+            topMarker.style.top = `${paddingTop}px`;
+        };
+
+        let draggedMarker = null;
+        let startY = 0;
+        let initialPadding = 0;
+
+        const startDrag = (e) => {
+            e.preventDefault();
+            draggedMarker = e.target;
+            startY = e.clientY;
+            
+            const editorStyle = window.getComputedStyle(editor);
+            initialPadding = parseFloat(editorStyle.paddingTop) || 0;
+
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', endDrag);
+            document.body.style.cursor = 'ns-resize';
+        };
+
+        const onDrag = (e) => {
+            if (!draggedMarker) return;
+            const dy = e.clientY - startY;
+            let newPaddingTop = initialPadding + dy;
+
+            // Limitar para que no sea negativo
+            newPaddingTop = Math.max(0, newPaddingTop);
+
+            // Aplicar al marcador y al editor en tiempo real
+            topMarker.style.top = `${newPaddingTop}px`;
+            editor.style.paddingTop = `${newPaddingTop}px`;
+        };
+
+        const endDrag = () => {
+            if (!draggedMarker) return;
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', endDrag);
+            document.body.style.cursor = '';
+            draggedMarker = null;
+            // La posición final ya está aplicada
+        };
+
+        topMarker.addEventListener('mousedown', startDrag);
+
+        // Sincronizar con el scroll vertical del contenedor del editor
+        editorBody.addEventListener('scroll', () => {
+            const scrollTop = editorBody.scrollTop;
+            topMarker.style.transform = `translateY(-${scrollTop}px)`;
+        });
+
+        // Observar cambios en el editor que puedan afectar los márgenes
+        const resizeObserver = new ResizeObserver(updateMarginMarkersPosition);
+        resizeObserver.observe(editor);
+        updateMarginMarkersPosition(); // Llamada inicial
     }
 });
