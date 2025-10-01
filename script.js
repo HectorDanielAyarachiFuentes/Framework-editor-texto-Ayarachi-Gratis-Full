@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 1; i < editorWidthInCm; i++) {
                 const number = document.createElement('span');
                 number.textContent = i;
-                number.style.left = `${(i * PX_PER_CM) + 2}px`;
+                number.style.left = `${(i * PX_PER_CM) + 25 + 2}px`; // <-- Añadimos 25px de offset
                 numbersH.appendChild(number);
             }
 
@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const scrollLeft = editor.scrollLeft;
             const scrollTop = editor.scrollTop;
 
-            rulerH.style.backgroundPosition = `-${scrollLeft}px center, -${scrollLeft}px center, -${scrollLeft}px center`;
+            rulerH.style.backgroundPosition = `${25 - scrollLeft}px center, ${25 - scrollLeft}px center, ${25 - scrollLeft}px center`;
             numbersH.style.transform = `translateX(-${scrollLeft}px)`;
 
             rulerV.style.backgroundPosition = `center -${scrollTop}px, center -${scrollTop}px, center -${scrollTop}px`;
@@ -354,7 +354,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const getParagraph = () => {
             const selection = window.getSelection();
             if (!selection.rangeCount) return null;
-            let node = selection.getRangeAt(0).startContainer;
+            // Usamos 'focusNode' en lugar de 'startContainer'.
+            // 'focusNode' representa el final de la selección (donde está el cursor),
+            // lo que es más intuitivo y soluciona el error al seleccionar de abajo hacia arriba.
+            let node = selection.focusNode;
             let element = node.nodeType === 3 ? node.parentNode : node;
             while (element && element !== editor && !['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(element.tagName)) {
                 element = element.parentNode;
@@ -364,31 +367,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const updateMarkersPosition = () => {
             const p = getParagraph();
-            if (!p) return;
-
-            const style = window.getComputedStyle(p);
             const editorStyle = window.getComputedStyle(editor);
-            
             const editorPaddingLeft = parseFloat(editorStyle.paddingLeft);
             const editorPaddingRight = parseFloat(editorStyle.paddingRight);
             const editorWidth = editor.clientWidth - editorPaddingLeft - editorPaddingRight;
 
-            const textIndent = parseFloat(style.textIndent);
-            const marginLeft = parseFloat(style.marginLeft) || 0;
-            const marginRight = parseFloat(style.marginRight) || 0;
+            const RULER_OFFSET = 25; // El ancho del "cuadrito" de la esquina
 
-            const firstLinePos = marginLeft + textIndent;
-            const hangingPos = marginLeft;
+            let firstLinePos = 0;
+            let hangingPos = 0;
+            let rightPos = editorWidth;
 
-            firstLineMarker.style.left = `${firstLinePos}px`;
-            hangingMarker.style.left = `${hangingPos}px`;
-            leftMarker.style.left = `${hangingPos}px`;
-            rightMarker.style.left = `${editorWidth - marginRight}px`;
+            if (p) {
+                const style = window.getComputedStyle(p);
+                const textIndent = parseFloat(style.textIndent) || 0;
+                const marginLeft = parseFloat(style.marginLeft) || 0;
+                const marginRight = parseFloat(style.marginRight) || 0;
+
+                firstLinePos = marginLeft + textIndent;
+                hangingPos = marginLeft;
+                rightPos = editorWidth - marginRight;
+            }
+
+            firstLineMarker.style.left = `${firstLinePos + RULER_OFFSET}px`;
+            hangingMarker.style.left = `${hangingPos + RULER_OFFSET}px`;
+            leftMarker.style.left = `${hangingPos + RULER_OFFSET}px`;
+            rightMarker.style.left = `${rightPos + RULER_OFFSET}px`;
         };
 
-        editor.addEventListener('click', updateMarkersPosition);
+        let selectionTimeout;
+        // Usar 'selectionchange' es más robusto para actualizar los marcadores
+        // ya que se dispara con el mouse, teclado, etc.
+        document.addEventListener('selectionchange', () => {
+            // Usamos un pequeño timeout para asegurarnos de que la selección se ha "asentado"
+            // antes de leerla. Esto soluciona los saltos erráticos durante la selección rápida.
+            clearTimeout(selectionTimeout);
+            selectionTimeout = setTimeout(updateMarkersPosition, 10);
+        });
         editor.addEventListener('keyup', updateMarkersPosition);
-        updateMarkersPosition(); // Posición inicial
+
+        // Llama a la función una vez al inicio para establecer la posición por defecto.
+        updateMarkersPosition();
 
         let draggedMarker = null;
         let startX = 0;
@@ -403,9 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
             draggedMarker = e.target;
             startX = e.clientX;
             initialPositions = {
-                firstLine: parseFloat(firstLineMarker.style.left) || 0,
-                left: parseFloat(leftMarker.style.left) || 0,
-                right: parseFloat(rightMarker.style.left) || 0
+                firstLine: parseFloat(firstLineMarker.style.left) || 25,
+                left: parseFloat(leftMarker.style.left) || 25,
+                right: parseFloat(rightMarker.style.left) || (editor.clientWidth - parseFloat(window.getComputedStyle(editor).paddingRight) + 25)
             };
 
             document.addEventListener('mousemove', onDrag);
@@ -457,10 +476,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const editorPaddingLeft = parseFloat(editorStyle.paddingLeft);
             const editorPaddingRight = parseFloat(editorStyle.paddingRight);
             const editorWidth = editor.clientWidth - editorPaddingLeft - editorPaddingRight;
+            
+            const RULER_OFFSET = 25;
 
             // Ajustar a la grilla (1mm) para un movimiento más limpio
             const gridSize = PX_PER_CM / 10;
-            const newMarginLeft = Math.round(leftPos / gridSize) * gridSize;
+            const newMarginLeft = Math.round((leftPos - RULER_OFFSET) / gridSize) * gridSize;
             const newFirstLineIndent = Math.round(firstLinePos / gridSize) * gridSize;
             const newRightPos = Math.round(rightPos / gridSize) * gridSize;
 

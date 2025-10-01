@@ -273,14 +273,14 @@
         .ruler-h {
             height: 25px;
             border-bottom: 1px solid #ddd;
-            padding-left: 25px; /* Espacio para la regla vertical */
+            /* padding-left: 25px;  <-- Eliminamos el padding que desalineaba el cero */
             /* Gradientes para simular marcas de regla en CM (1cm ≈ 37.8px) */
             background-image:
                 repeating-linear-gradient(to right, #ccc, #ccc 1px, transparent 1px, transparent 3.78px),  /* Marcas de 1mm */
                 repeating-linear-gradient(to right, #999, #999 1px, transparent 1px, transparent 18.9px), /* Marcas de 0.5cm */
                 repeating-linear-gradient(to right, #555, #555 1px, transparent 1px, transparent 37.8px);  /* Marcas de 1cm */
             background-repeat: repeat-x;
-            background-position: 0 center, 0 center, 0 center; /* Centra las marcas verticalmente */
+            background-position: 25px center, 25px center, 25px center; /* <-- Compensamos el fondo para alinearlo */
             background-size: auto 4px, auto 7px, auto 12px; /* Altura de cada tipo de marca */
         }
 
