@@ -239,6 +239,58 @@
             cursor: pointer;
         }
 
+        /* CONTENEDOR PRINCIPAL DEL EDITOR (CON REGLAS) */
+        .editor-main-area {
+            position: relative;
+        }
+
+        .editor-body {
+            display: flex;
+        }
+
+        /* ESTILOS PARA LAS REGLAS */
+        .ruler-h, .ruler-v {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 10px;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .ruler-h {
+            height: 25px;
+            border-bottom: 1px solid #ddd;
+            padding-left: 25px; /* Espacio para la regla vertical */
+            box-sizing: border-box;
+            /* Marcas de la regla con gradientes */
+            background-image:
+                linear-gradient(to right, #ccc 1px, transparent 1px),
+                linear-gradient(to right, #aaa 1px, transparent 1px);
+            background-size: 18.9px 100%, 94.5px 100%; /* 0.5cm y 2.5cm a 96dpi */
+            background-position: 0 15px, 0 10px;
+        }
+
+        .ruler-v {
+            width: 25px;
+            flex-shrink: 0;
+            border-right: 1px solid #ddd;
+            /* Marcas de la regla con gradientes */
+            background-image:
+                linear-gradient(to bottom, #ccc 1px, transparent 1px),
+                linear-gradient(to bottom, #aaa 1px, transparent 1px);
+            background-size: 100% 18.9px, 100% 94.5px; /* 0.5cm y 2.5cm a 96dpi */
+        }
+
+        /* Esquina superior izquierda entre las reglas */
+        .ruler-h::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; width: 25px; height: 25px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+        }
+
         /* ÁREA DEL EDITOR */
         .editor {
             padding: 20px;

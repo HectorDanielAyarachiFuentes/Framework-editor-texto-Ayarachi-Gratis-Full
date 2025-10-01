@@ -162,11 +162,19 @@
             <button class="toolbar-button" data-action="insertImage" title="Insertar Imagen"><i class="fa-regular fa-image"></i></button>
         </div>
 
-        <!-- ÁREA DEL EDITOR -->
-        <div id="editor" class="editor" contenteditable="true">
-            <p>¡Bienvenido a Ayarachi!</p>
+        <!-- CONTENEDOR DEL EDITOR Y LAS REGLAS -->
+        <div class="editor-main-area">
+            <!-- REGLA HORIZONTAL -->
+            <div class="ruler-h"></div>
+            <div class="editor-body">
+                <!-- REGLA VERTICAL -->
+                <div class="ruler-v"></div>
+                <!-- ÁREA DEL EDITOR -->
+                <div id="editor" class="editor" contenteditable="true">
+                    <p>¡Bienvenido a Ayarachi!</p>
+                </div>
+            </div>
         </div>
-
         <!-- BARRA DE ESTADO -->
         <div class="status-bar">
             <span id="wordCountDisplay">0 palabras</span>
