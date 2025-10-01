@@ -289,6 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const PX_PER_CM = 37.795;
 
         const drawRulers = () => {
+            // Leemos el padding-top actual del editor desde la variable CSS
+            const editorStyle = getComputedStyle(editor);
+            const editorPaddingTop = parseFloat(editorStyle.getPropertyValue('--editor-padding-top'));
+
             // Limpiar números existentes
             numbersH.innerHTML = '';
             numbersV.innerHTML = '';
@@ -300,6 +304,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const contentWidth = editor.scrollWidth;
 
             rulerV.style.height = `${contentHeight}px`;
+
+            // Sincronizamos el fondo de la regla vertical con el padding del editor
+            rulerV.style.backgroundPosition = 
+                `center ${editorPaddingTop}px, center ${editorPaddingTop}px, center ${editorPaddingTop}px`;
+
             // ***** FIN DE LA CORRECCIÓN CLAVE *****
 
             // Calculamos los números a dibujar
@@ -320,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 1; i < editorHeightInCm; i++) {
                 const number = document.createElement('span');
                 number.textContent = i;
-                number.style.top = `${i * PX_PER_CM}px`;
+                number.style.top = `${(i * PX_PER_CM) + editorPaddingTop}px`; // <-- Añadimos el offset del padding
                 numbersV.appendChild(number);
             }
         };
@@ -329,12 +338,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Sincronizar el scroll
             const scrollLeft = editor.scrollLeft;
             const scrollTop = editor.scrollTop;
+            const editorStyle = getComputedStyle(editor);
+            const editorPaddingTop = parseFloat(editorStyle.getPropertyValue('--editor-padding-top'));
 
             rulerH.style.backgroundPosition = `${25 - scrollLeft}px center, ${25 - scrollLeft}px center, ${25 - scrollLeft}px center`;
             numbersH.style.transform = `translateX(-${scrollLeft}px)`;
 
-            rulerV.style.backgroundPosition = `center -${scrollTop}px, center -${scrollTop}px, center -${scrollTop}px`;
-            numbersV.style.transform = `translateY(-${scrollTop}px)`;
+            // El offset del fondo es el padding MENOS el scroll
+            rulerV.style.backgroundPosition = `center ${editorPaddingTop - scrollTop}px, center ${editorPaddingTop - scrollTop}px, center ${editorPaddingTop - scrollTop}px`;
+            numbersV.style.transform = `translateY(-${scrollTop}px)`; // El contenedor de números solo necesita el scroll
         };
         
         drawRulers();
@@ -564,6 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Aplicar al marcador y al editor en tiempo real
             topMarker.style.top = `${newPaddingTop}px`;
             editor.style.paddingTop = `${newPaddingTop}px`;
+            editor.style.setProperty('--editor-padding-top', `${newPaddingTop}px`); // Actualizar variable CSS
         };
 
         const endDrag = () => {
@@ -573,6 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.cursor = '';
             draggedMarker = null;
             // La posición final ya está aplicada
+            drawRulers(); // Redibujar reglas para que los números se ajusten
         };
 
         topMarker.addEventListener('mousedown', startDrag);

@@ -398,6 +398,7 @@
             width: 100%;
             min-height: 400px;
             box-sizing: border-box;
+            --editor-padding-top: 20px; /* Variable para JS */
         }
 
         /* Estilos para cuando se aplica un tamaño de página */
@@ -405,6 +406,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.15);
             border: 1px solid #ccc;
             padding: 2.54cm; /* Margen estándar de 1 pulgada */
+            --editor-padding-top: 2.54cm; /* Actualizamos la variable */
             box-sizing: content-box; /* Importante para que el padding no se reste del width/height */
             min-height: auto;
             overflow: hidden; /* El scroll principal lo maneja editor-body */
