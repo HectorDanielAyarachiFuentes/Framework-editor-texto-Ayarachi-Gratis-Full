@@ -324,6 +324,48 @@
             border-right: 1px solid #ddd;
         }
 
+        /* Marcadores de Sangría en la Regla */
+        .indent-marker {
+            position: absolute;
+            cursor: ew-resize;
+            z-index: 10;
+            background-color: #6a7f9e;
+            border: 1px solid #3b4d69;
+            box-sizing: border-box;
+        }
+
+        #indent-first-line {
+            top: 1px;
+            width: 14px;
+            height: 10px;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 100%, 0 50%);
+            transform: translateX(-50%);
+        }
+
+        #indent-hanging {
+            top: 11px;
+            width: 14px;
+            height: 10px;
+            clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%);
+            transform: translateX(-50%);
+        }
+
+        #indent-left {
+            top: 21px;
+            width: 14px;
+            height: 4px;
+            transform: translateX(-50%);
+        }
+
+        #indent-right {
+            top: 1px;
+            width: 14px;
+            height: 10px;
+            clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%);
+            transform: translateX(-50%) rotate(180deg);
+            right: 0;
+        }
+
         /* ÁREA DEL EDITOR */
         .editor {
             padding: 20px;

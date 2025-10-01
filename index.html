@@ -176,7 +176,14 @@
         <!-- CONTENEDOR DEL EDITOR Y LAS REGLAS -->
         <div class="editor-main-area">
             <!-- REGLA HORIZONTAL -->
-            <div class="ruler-h"><div class="ruler-numbers-h"></div></div>
+            <div class="ruler-h">
+                <div class="ruler-numbers-h"></div>
+                <!-- Marcadores de Sangría -->
+                <div id="indent-first-line" class="indent-marker" draggable="true" title="Sangría de primera línea"></div>
+                <div id="indent-hanging" class="indent-marker" draggable="true" title="Sangría francesa"></div>
+                <div id="indent-left" class="indent-marker" draggable="true" title="Sangría izquierda"></div>
+                <div id="indent-right" class="indent-marker" draggable="true" title="Sangría derecha"></div>
+            </div>
             <div class="editor-body">
                 <!-- REGLA VERTICAL -->
                 <div class="ruler-v"><div class="ruler-numbers-v"></div></div>

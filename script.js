@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- INICIALIZACIÓN DE LAS REGLAS ---
     initRulers();
 
+    // --- INICIALIZACIÓN DE MARCADORES DE SANGRÍA ---
+    initIndentMarkers();
+
     // --- FUNCIONES BÁSICAS DEL EDITOR ---
     const executeCommand = (command, value = null) => {
         document.execCommand(command, false, value);
@@ -335,5 +338,129 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const resizeObserver = new ResizeObserver(drawRulers);
         resizeObserver.observe(editor);
+    }
+
+    // --- LÓGICA DE SANGRÍA CON MARCADORES EN LA REGLA ---
+    function initIndentMarkers() {
+        const editor = document.getElementById('editor');
+        const rulerH = document.querySelector('.ruler-h');
+        const firstLineMarker = document.getElementById('indent-first-line');
+        const hangingMarker = document.getElementById('indent-hanging');
+        const leftMarker = document.getElementById('indent-left');
+        const rightMarker = document.getElementById('indent-right');
+
+        const PX_PER_CM = 37.795;
+
+        const getParagraph = () => {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return null;
+            let node = selection.getRangeAt(0).startContainer;
+            let element = node.nodeType === 3 ? node.parentNode : node;
+            while (element && element !== editor && !['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(element.tagName)) {
+                element = element.parentNode;
+            }
+            return (element && editor.contains(element)) ? element : null;
+        };
+
+        const updateMarkersPosition = () => {
+            const p = getParagraph();
+            if (!p) return;
+
+            const style = window.getComputedStyle(p);
+            const editorStyle = window.getComputedStyle(editor);
+            
+            const editorPaddingLeft = parseFloat(editorStyle.paddingLeft);
+            const editorPaddingRight = parseFloat(editorStyle.paddingRight);
+            const editorWidth = editor.clientWidth - editorPaddingLeft - editorPaddingRight;
+
+            const textIndent = parseFloat(style.textIndent);
+            const marginLeft = parseFloat(style.marginLeft) || 0;
+            const marginRight = parseFloat(style.marginRight) || 0;
+
+            const firstLinePos = marginLeft + textIndent;
+            const hangingPos = marginLeft;
+
+            firstLineMarker.style.left = `${firstLinePos}px`;
+            hangingMarker.style.left = `${hangingPos}px`;
+            leftMarker.style.left = `${hangingPos}px`;
+            rightMarker.style.left = `${editorWidth - marginRight}px`;
+        };
+
+        editor.addEventListener('click', updateMarkersPosition);
+        editor.addEventListener('keyup', updateMarkersPosition);
+        updateMarkersPosition(); // Posición inicial
+
+        let draggedMarker = null;
+        let startX = 0;
+        let startLeft = 0;
+
+        const startDrag = (e) => {
+            draggedMarker = e.target;
+            startX = e.clientX;
+            startLeft = parseFloat(draggedMarker.style.left) || 0;
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', endDrag);
+            rulerH.style.cursor = 'ew-resize';
+        };
+
+        const onDrag = (e) => {
+            if (!draggedMarker) return;
+            const dx = e.clientX - startX;
+            let newLeft = startLeft + dx;
+
+            // Ajustar a la grilla de la regla (opcional, pero mejora UX)
+            const gridSize = PX_PER_CM / 10; // 1mm
+            newLeft = Math.round(newLeft / gridSize) * gridSize;
+
+            draggedMarker.style.left = `${newLeft}px`;
+
+            // Mover marcadores agrupados
+            if (draggedMarker.id === 'indent-left') {
+                firstLineMarker.style.left = `${newLeft}px`;
+                hangingMarker.style.left = `${newLeft}px`;
+            } else if (draggedMarker.id === 'indent-hanging') {
+                leftMarker.style.left = `${newLeft}px`;
+            }
+        };
+
+        const endDrag = () => {
+            if (!draggedMarker) return;
+
+            const p = getParagraph();
+            if (p) {
+                const editorPaddingLeft = parseFloat(window.getComputedStyle(editor).paddingLeft);
+                const editorWidth = editor.clientWidth - editorPaddingLeft - parseFloat(window.getComputedStyle(editor).paddingRight);
+
+                const firstLinePos = parseFloat(firstLineMarker.style.left);
+                const leftPos = parseFloat(leftMarker.style.left);
+                const rightPos = parseFloat(rightMarker.style.left);
+
+                const newMarginLeft = leftPos;
+                const newTextIndent = firstLinePos - leftPos;
+                const newMarginRight = editorWidth - rightPos;
+
+                p.style.marginLeft = `${newMarginLeft > 0 ? newMarginLeft : 0}px`;
+                p.style.textIndent = `${newTextIndent}px`;
+                p.style.marginRight = `${newMarginRight > 0 ? newMarginRight : 0}px`;
+            }
+
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', endDrag);
+            rulerH.style.cursor = 'default';
+            draggedMarker = null;
+            updateMarkersPosition(); // Sincronizar todos los marcadores
+        };
+
+        [firstLineMarker, hangingMarker, leftMarker, rightMarker].forEach(marker => {
+            marker.addEventListener('mousedown', startDrag);
+        });
+
+        // Sincronizar marcadores con el scroll horizontal del editor
+        editor.addEventListener('scroll', () => {
+            const scrollLeft = editor.scrollLeft;
+            [firstLineMarker, hangingMarker, leftMarker, rightMarker].forEach(marker => {
+                marker.style.transform = `translateX(-${scrollLeft}px)`;
+            });
+        });
     }
 });
