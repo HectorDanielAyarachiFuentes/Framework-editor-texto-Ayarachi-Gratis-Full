@@ -11,6 +11,12 @@
             color: #333;
         }
 
+        /* Estilo global durante el arrastre de sangría */
+        body.is-dragging {
+            cursor: ew-resize;
+            user-select: none; /* Evita la selección de texto accidental */
+        }
+
         /* CONTENEDOR DEL EDITOR */
         .editor-container {
             width: 90%;
