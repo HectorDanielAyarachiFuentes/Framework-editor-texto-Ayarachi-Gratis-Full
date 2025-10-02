@@ -11,10 +11,10 @@ Tu entorno de trabajo es un reflejo de tu mente. ¡Elige el tema que mejor te re
 - **Temas que Hacen Magia**: ¿El clásico `Claro` o el enigmático `Oscuro`? 🌓 ¿O prefieres un viaje en el tiempo con el nostálgico `Windows XP`? 🕰️ ¿Quizás la elegancia transparente de `Aero Linux` te fascina? 🏙️ O el minimalismo moderno de `Windows 11` te inspira. Y, por supuesto, no te pierdas el exclusivo y terrenal tema `Ayarachi`.
 
     > 🏞️ **Aero Linux Theme**: Un fondo que te transporta a la naturaleza, con una interfaz de cristal semitransparente que te permite ver a través. ¡Un soplo de aire fresco!
-    > ![Vista Previa del Tema Aero Linux](https://camo.githubusercontent.com/cfbd0ec1b033f9682156173cd2b65197954ca8ab6a7e6ca7976ba34c85d1664a/68747470733a2f2f696d616765732e706c696e672e636f6d2f696d672f30302f30302f38302f31312f31372f323138333331352f73637265656e73686f742d32303234303732392d3136333334352e706e67)
+    > ![Vista Previa del Tema Aero Linux](https://github.com/HectorDanielAyarachiFuentes/Framework-editor-texto-Ayarachi-Gratis-Full/blob/main/img.md/aereo-linux.png?raw=true)
 
     > 🗿 **Ayarachi Theme**: Siente la conexión con la tierra. Un lienzo de papiro con bordes dorados, rodeado por un patrón de roca. ¡Escribe tus propias leyendas!
-    > ![Vista Previa del Tema Ayarachi Inca](https://www.transparenttextures.com/patterns/rocky-wall.png)
+    > ![Vista Previa del Tema Ayarachi Inca](https://github.com/HectorDanielAyarachiFuentes/Framework-editor-texto-Ayarachi-Gratis-Full/blob/main/img.md/ayarachitheme.png?raw=true)
 
 ### 🚀 **Superpoderes para Tus Documentos**
 
@@ -22,7 +22,7 @@ Ayarachi no se queda en la superficie. Te equipa con un arsenal de herramientas 
 
 - **Importa y Anota PDF**: ¿Necesitas revisar un informe o un libro? ¡Abre archivos PDF y haz magia! `Dibuja` con el lápiz 🎨, `añade texto` 📝 y `resalta` las ideas clave. Al terminar, descarga tu PDF con todas tus anotaciones listas.
 
-    ![Visor de PDF con Anotaciones](https://i.imgur.com/4z8B0xX.png)
+    ![Visor de PDF con Anotaciones](https://github.com/HectorDanielAyarachiFuentes/Framework-editor-texto-Ayarachi-Gratis-Full/blob/main/img.md/pdf-visor.png?raw=true)
 
 - **Control Total de la Sangría**: ¡Di adiós a los márgenes predeterminados! Con nuestras reglas interactivas, puedes arrastrar marcadores para ajustar la sangría y los márgenes con una precisión milimétrica.
 
