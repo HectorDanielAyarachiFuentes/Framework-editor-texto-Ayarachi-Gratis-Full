@@ -1,539 +1,548 @@
 /* ESTILOS CSS PARA EL EDITOR DE TEXTO RICO */
-        /* ESTILOS GENERALES */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
 
-        /* Estilo global durante el arrastre de sangría */
-        body.is-dragging {
-            cursor: ew-resize;
-            user-select: none; /* Evita la selección de texto accidental */
-        }
+/* Definición de variables de color para temas */
+:root {
+    --bg-color: #f4f4f9;
+    --editor-bg-color: #fff;
+    --text-color: #333;
+    --border-color: #ddd;
+    --menu-bg-color: #f8f9fa;
+    --menu-hover-bg-color: #e9ecef;
+    --dropdown-bg-color: white;
+    --dropdown-hover-bg-color: #f1f3f5;
+    --dropdown-text-color: #333;
+    --dropdown-shortcut-text-color: #6c757d;
+    --icon-color: #555;
+    --separator-color: #ddd;
+    --modal-bg-color: #fff;
+    --modal-header-bg-color: #f8f9fa;
+    --modal-footer-bg-color: #f8f9fa;
+    --modal-overlay-bg-color: rgba(0,0,0,0.5);
+    --button-primary-bg-color: #343a40;
+    --button-primary-text-color: white;
+    --ruler-bg-color: #fdfdfd;
+    --ruler-text-color: #6c757d;
+    --ruler-mark-1-color: #ccc;
+    --ruler-mark-2-color: #999;
+    --ruler-mark-3-color: #555;
+    --indent-marker-bg-color: #6a7f9e;
+    --indent-marker-border-color: #3b4d69;
+}
 
-        /* CONTENEDOR DEL EDITOR */
-        .editor-container {
-            width: 90%;
-            max-width: 850px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            border-radius: 6px;
-            overflow: hidden; /* Para contener los bordes redondeados */
-        }
+[data-theme="dark"] {
+    --bg-color: #2c2c2c;
+    --editor-bg-color: #3a3a3a;
+    --text-color: #f1f1f1;
+    --border-color: #555;
+    --menu-bg-color: #333;
+    --menu-hover-bg-color: #444;
+    --dropdown-bg-color: #3a3a3a;
+    --dropdown-hover-bg-color: #555;
+    --dropdown-text-color: #f1f1f1;
+    --dropdown-shortcut-text-color: #aaa;
+    --icon-color: #ccc;
+    --separator-color: #555;
+    --modal-bg-color: #3a3a3a;
+    --modal-header-bg-color: #333;
+    --modal-footer-bg-color: #333;
+    --modal-overlay-bg-color: rgba(0,0,0,0.7);
+    --button-primary-bg-color: #555;
+    --button-primary-text-color: #f1f1f1;
+    --ruler-bg-color: #3a3a3a;
+    --ruler-text-color: #aaa;
+    --ruler-mark-1-color: #666;
+    --ruler-mark-2-color: #888;
+    --ruler-mark-3-color: #aaa;
+    --indent-marker-bg-color: #8a9bb8;
+    --indent-marker-border-color: #5c6a82;
+}
 
-        /* BARRA DE MENÚ */
-        .menu-bar {
-            padding: 4px 12px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            gap: 5px;
-            font-size: 14px;
-            position: relative;
-        }
+/* ESTILOS GENERALES */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
 
-        .menu-item {
-            position: relative;
-        }
+/* Estilo global durante el arrastre de sangría */
+body.is-dragging {
+    cursor: ew-resize;
+    user-select: none; /* Evita la selección de texto accidental */
+}
 
-        .menu-button {
-            cursor: pointer;
-            padding: 6px 8px;
-            border-radius: 4px;
-            user-select: none;
-        }
+/* CONTENEDOR DEL EDITOR */
+.editor-container {
+    width: 90%;
+    max-width: 850px;
+    background-color: var(--editor-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    overflow: hidden; /* Para contener los bordes redondeados */
+}
 
-        .menu-button:hover, .menu-button.active {
-            background-color: #e9ecef;
-        }
+/* BARRA DE MENÚ */
+.menu-bar {
+    padding: 4px 12px;
+    background-color: var(--menu-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 5px;
+    font-size: 14px;
+    position: relative;
+}
 
-        /* MENÚS DESPLEGABLES */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: white;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 5px 0;
-            z-index: 1000;
-            min-width: 240px;
-        }
+.menu-item {
+    position: relative;
+}
 
-        .dropdown-menu.show {
-            display: block;
-        }
+.menu-button {
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    user-select: none;
+    color: var(--text-color);
+}
 
-        .dropdown-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 15px;
-            font-size: 14px;
-            color: #333;
-            cursor: pointer;
-            text-decoration: none;
-            user-select: none;
-        }
+.menu-button:hover, .menu-button.active {
+    background-color: var(--menu-hover-bg-color);
+}
 
-        .dropdown-item:hover {
-            background-color: #f1f3f5;
-            color: #212529;
-        }
+/* MENÚS DESPLEGABLES */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--dropdown-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 5px 0;
+    z-index: 1000;
+    min-width: 240px;
+}
 
-        .dropdown-item:hover .shortcut,
-        .dropdown-item:hover i {
-            color: #495057;
-        }
+.dropdown-menu.show {
+    display: block;
+}
 
-        .dropdown-item i {
-            margin-right: 12px;
-            width: 18px;
-            text-align: center;
-            color: #555;
-        }
+.dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: var(--dropdown-text-color);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+}
 
-        .dropdown-menu hr {
-            margin: 4px 0;
-            border: 0;
-            border-top: 1px solid #eee;
-        }
+.dropdown-item:hover {
+    background-color: var(--dropdown-hover-bg-color);
+    color: var(--dropdown-text-color);
+}
 
-        .shortcut {
-            color: #6c757d;
-            font-size: 12px;
-        }
+.dropdown-item:hover .shortcut,
+.dropdown-item:hover i {
+    color: var(--dropdown-shortcut-text-color);
+}
 
-        /* SUBMENÚS */
-        .dropdown-item.has-submenu {
-            position: relative;
-        }
+.dropdown-item i {
+    margin-right: 12px;
+    width: 18px;
+    text-align: center;
+    color: var(--icon-color);
+}
 
-        .dropdown-item i.fa-chevron-right {
-            font-size: 10px;
-            color: #6c757d;
-            margin-left: auto;
-            padding-left: 15px;
-        }
+.dropdown-menu hr {
+    margin: 4px 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
 
-        .submenu {
-            display: none;
-            position: absolute;
-            top: -6px;
-            left: 100%;
-            background-color: white;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 5px 0;
-            min-width: 220px;
-        }
+.shortcut {
+    color: var(--dropdown-shortcut-text-color);
+    font-size: 12px;
+}
 
-        .dropdown-item.has-submenu:hover > .submenu {
-            display: block;
-        }
+/* SUBMENÚS */
+.dropdown-item.has-submenu {
+    position: relative;
+}
 
-        .table-grid-submenu {
-            padding: 10px;
-            min-width: auto;
-        }
+.dropdown-item i.fa-chevron-right {
+    font-size: 10px;
+    color: var(--dropdown-shortcut-text-color);
+    margin-left: auto;
+    padding-left: 15px;
+}
 
-        .table-grid-picker {
-            display: grid;
-            grid-template-columns: repeat(10, 20px);
-            gap: 3px;
-        }
+.submenu {
+    display: none;
+    position: absolute;
+    top: -6px;
+    left: 100%;
+    background-color: var(--dropdown-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 5px 0;
+    min-width: 220px;
+}
 
-        .table-grid-picker div {
-            width: 20px;
-            height: 20px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            cursor: pointer;
-        }
+.dropdown-item.has-submenu:hover > .submenu {
+    display: block;
+}
 
-        .table-grid-picker div.highlight {
-            background-color: #e9ecef;
-            border-color: #adb5bd;
-        }
+.table-grid-submenu {
+    padding: 10px;
+    min-width: auto;
+}
 
-        .table-grid-size {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 12px;
-            color: #666;
-        }
+.table-grid-picker {
+    display: grid;
+    grid-template-columns: repeat(10, 20px);
+    gap: 3px;
+}
 
-        /* BARRA DE HERRAMIENTAS */
-        .toolbar {
-            padding: 8px 12px;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .toolbar-button, .toolbar-select {
-            background-color: transparent;
-            border: 1px solid transparent;
-            padding: 5px 8px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-        
-        .toolbar-button {
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+.table-grid-picker div {
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
 
-        .toolbar-button:hover, .toolbar-select:hover {
-            background-color: #e9ecef;
-            border-color: #ced4da;
-        }
+.table-grid-picker div.highlight {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
 
-        .toolbar-button i {
-            font-size: 16px;
-            color: #333;
-        }
+.table-grid-size {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+}
 
-        .toolbar-separator {
-            width: 1px;
-            height: 20px;
-            background-color: #ddd;
-            margin: 0 5px;
-        }
+/* BARRA DE HERRAMIENTAS */
+.toolbar {
+    padding: 8px 12px;
+    background-color: var(--editor-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 
-        .toolbar-color-picker {
-            position: relative;
-            width: 32px;
-            height: 32px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
+.toolbar-button, .toolbar-select {
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-color);
+}
 
-        .toolbar-color-picker:hover {
-            background-color: #e9ecef;
-            border-color: #ced4da;
-        }
+.toolbar-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .toolbar-color-picker input[type="color"] {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
+.toolbar-button:hover, .toolbar-select:hover {
+    background-color: var(--menu-hover-bg-color);
+    border-color: var(--border-color);
+}
 
-        /* CONTENEDOR PRINCIPAL DEL EDITOR (CON REGLAS) */
-        .editor-main-area {
-            position: relative;
-        }
+.toolbar-button i {
+    font-size: 16px;
+    color: var(--icon-color);
+}
 
-        .editor-body {
-            display: flex;
-            background-color: #e9ecef; /* Fondo gris para el área que rodea la página */
-            padding: 20px 0;
-            justify-content: center;
-            overflow: auto;
-            max-height: 70vh; /* Limita la altura del scroll para ver la página completa */
-        }
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background-color: var(--separator-color);
+    margin: 0 5px;
+}
 
-        /* ESTILOS PARA LAS REGLAS */
-        .ruler-h, .ruler-v {
-            background-color: #fdfdfd;
-            color: #6c757d;
-            font-size: 10px;
-            position: relative;
-            overflow: hidden;
-            user-select: none;
-            background-repeat: repeat;
-        }
+.toolbar-color-picker {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 
-        .ruler-h {
-            height: 25px;
-            border-bottom: 1px solid #ddd;
-            /* padding-left: 25px;  <-- Eliminamos el padding que desalineaba el cero */
-            /* Gradientes para simular marcas de regla en CM (1cm ≈ 37.8px) */
-            background-image:
-                repeating-linear-gradient(to right, #ccc, #ccc 1px, transparent 1px, transparent 3.78px),  /* Marcas de 1mm */
-                repeating-linear-gradient(to right, #999, #999 1px, transparent 1px, transparent 18.9px), /* Marcas de 0.5cm */
-                repeating-linear-gradient(to right, #555, #555 1px, transparent 1px, transparent 37.8px);  /* Marcas de 1cm */
-            background-repeat: repeat-x;
-            background-position: 25px center, 25px center, 25px center; /* <-- Compensamos el fondo para alinearlo */
-            background-size: auto 4px, auto 7px, auto 12px; /* Altura de cada tipo de marca */
-        }
+.toolbar-color-picker:hover {
+    background-color: var(--menu-hover-bg-color);
+    border-color: var(--border-color);
+}
 
-        .ruler-v {
-            width: 25px;
-            flex-shrink: 0;
-            border-right: 1px solid #ddd;
-            /* Gradientes para simular marcas de regla en CM (1cm ≈ 37.8px) */
-            background-image:
-                repeating-linear-gradient(to bottom, #ccc, #ccc 1px, transparent 1px, transparent 3.78px),
-                repeating-linear-gradient(to bottom, #999, #999 1px, transparent 1px, transparent 18.9px),
-                repeating-linear-gradient(to bottom, #555, #555 1px, transparent 1px, transparent 37.8px);
-            background-repeat: repeat-y;
-            background-position: center 0, center 0, center 0; /* Centra las marcas horizontalmente */
-            background-size: 4px auto, 7px auto, 12px auto; /* Ancho de cada tipo de marca */
-        }
+.toolbar-color-picker input[type="color"] {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
 
-        /* Contenedores para los números de las reglas */
-        .ruler-numbers-h, .ruler-numbers-v {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+/* CONTENEDOR PRINCIPAL DEL EDITOR (CON REGLAS) */
+.editor-main-area {
+    position: relative;
+}
 
-        .ruler-numbers-h span, .ruler-numbers-v span {
-            position: absolute;
-            color: #555;
-            font-size: 10px;
-        }
+.editor-body {
+    display: flex;
+    background-color: var(--bg-color);
+    padding: 20px 0;
+    justify-content: center;
+    overflow: auto;
+    max-height: 70vh;
+}
 
-        .ruler-numbers-h span {
-            top: 2px;
-        }
+/* ESTILOS PARA LAS REGLAS */
+.ruler-h, .ruler-v {
+    background-color: var(--ruler-bg-color);
+    color: var(--ruler-text-color);
+    font-size: 10px;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    background-repeat: repeat;
+}
 
-        .ruler-numbers-v span {
-            left: 4px;
-        }
+.ruler-h {
+    height: 25px;
+    border-bottom: 1px solid var(--border-color);
+    background-image:
+        repeating-linear-gradient(to right, var(--ruler-mark-1-color), var(--ruler-mark-1-color) 1px, transparent 1px, transparent 3.78px),
+        repeating-linear-gradient(to right, var(--ruler-mark-2-color), var(--ruler-mark-2-color) 1px, transparent 1px, transparent 18.9px),
+        repeating-linear-gradient(to right, var(--ruler-mark-3-color), var(--ruler-mark-3-color) 1px, transparent 1px, transparent 37.8px);
+    background-repeat: repeat-x;
+    background-position: 25px center, 25px center, 25px center;
+    background-size: auto 4px, auto 7px, auto 12px;
+}
 
-        /* Esquina superior izquierda entre las reglas */
-        .ruler-h::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; width: 25px; height: 25px;
-            background-color: #fdfdfd;
-            border-right: 1px solid #ddd;
-        }
+.ruler-v {
+    width: 25px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-color);
+    background-image:
+        repeating-linear-gradient(to bottom, var(--ruler-mark-1-color), var(--ruler-mark-1-color) 1px, transparent 1px, transparent 3.78px),
+        repeating-linear-gradient(to bottom, var(--ruler-mark-2-color), var(--ruler-mark-2-color) 1px, transparent 1px, transparent 18.9px),
+        repeating-linear-gradient(to bottom, var(--ruler-mark-3-color), var(--ruler-mark-3-color) 1px, transparent 1px, transparent 37.8px);
+    background-repeat: repeat-y;
+    background-position: center 0, center 0, center 0;
+    background-size: 4px auto, 7px auto, 12px auto;
+}
 
-        /* Marcadores de Sangría en la Regla */
-        .indent-marker {
-            position: absolute;
-            cursor: ew-resize;
-            z-index: 10;
-            background-color: #6a7f9e;
-            border: 1px solid #3b4d69;
-            box-sizing: border-box;
-        }
+.ruler-numbers-h, .ruler-numbers-v {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 
-        #indent-first-line {
-            top: 1px;
-            width: 14px;
-            height: 10px;
-            clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 100%, 0 50%);
-            transform: translateX(-50%);
-        }
+.ruler-numbers-h span, .ruler-numbers-v span {
+    position: absolute;
+    color: var(--ruler-mark-3-color);
+    font-size: 10px;
+}
 
-        #indent-hanging {
-            top: 11px;
-            width: 14px;
-            height: 10px;
-            clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%);
-            transform: translateX(-50%);
-        }
+.ruler-numbers-h span {
+    top: 2px;
+}
 
-        #indent-left {
-            top: 21px;
-            width: 14px;
-            height: 4px;
-            transform: translateX(-50%);
-        }
+.ruler-numbers-v span {
+    left: 4px;
+}
 
-        #indent-right {
-            top: 1px;
-            width: 14px;
-            height: 10px;
-            clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%);
-            transform: translateX(-50%) rotate(180deg);
-            right: 0;
-        }
+.ruler-h::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; width: 25px; height: 25px;
+    background-color: var(--ruler-bg-color);
+    border-right: 1px solid var(--border-color);
+}
 
-        /* Marcadores de Margen en la Regla Vertical */
-        .margin-marker {
-            position: absolute;
-            cursor: ns-resize;
-            z-index: 10;
-            background-color: #6a7f9e;
-            border: 1px solid #3b4d69;
-            box-sizing: border-box;
-            width: 10px;
-            height: 14px;
-            left: 1px;
-            clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
-            transform: translateY(-50%);
-        }
-        /* ÁREA DEL EDITOR */
-        .editor {
-            padding: 20px;
-            outline: none;
-            font-size: 16px;
-            line-height: 1.6;
-            overflow-y: auto; /* Scroll interno si el contenido excede la página */
-            background-color: #fff;
-            /* Estilos por defecto (automático) */
-            width: 100%;
-            min-height: 400px;
-            box-sizing: border-box;
-            --editor-padding-top: 20px; /* Variable para JS */
-        }
+/* Marcadores de Sangría en la Regla */
+.indent-marker {
+    position: absolute;
+    cursor: ew-resize;
+    z-index: 10;
+    background-color: var(--indent-marker-bg-color);
+    border: 1px solid var(--indent-marker-border-color);
+    box-sizing: border-box;
+}
 
-        /* Estilos para cuando se aplica un tamaño de página */
-        .editor.page-view {
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-            border: 1px solid #ccc;
-            padding: 2.54cm; /* Margen estándar de 1 pulgada */
-            --editor-padding-top: 2.54cm; /* Actualizamos la variable */
-            box-sizing: content-box; /* Importante para que el padding no se reste del width/height */
-            min-height: auto;
-            overflow: hidden; /* El scroll principal lo maneja editor-body */
-        }
+#indent-first-line { top: 1px; width: 14px; height: 10px; clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 100%, 0 50%); transform: translateX(-50%); }
+#indent-hanging { top: 11px; width: 14px; height: 10px; clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%); transform: translateX(-50%); }
+#indent-left { top: 21px; width: 14px; height: 4px; transform: translateX(-50%); }
+#indent-right { top: 1px; width: 14px; height: 10px; clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%); transform: translateX(-50%) rotate(180deg); right: 0; }
 
-        /* Dimensiones de página (1cm ≈ 37.8px) */
-        .editor.page-A4 { width: 21cm; height: 29.7cm; }
-        .editor.page-Letter { width: 21.59cm; height: 27.94cm; }
-        .editor.page-Legal { width: 21.59cm; height: 35.56cm; }
-        .editor.page-A5 { width: 14.8cm; height: 21cm; }
+/* Marcadores de Margen en la Regla Vertical */
+.margin-marker {
+    position: absolute;
+    cursor: ns-resize;
+    z-index: 10;
+    background-color: var(--indent-marker-bg-color);
+    border: 1px solid var(--indent-marker-border-color);
+    box-sizing: border-box;
+    width: 10px;
+    height: 14px;
+    left: 1px;
+    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+    transform: translateY(-50%);
+}
 
-        /* Estilos de impresión para que coincidan con el tamaño de página */
-        @media print {
-            body { background-color: #fff; }
-            .editor-container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
-            .menu-bar, .toolbar, .status-bar, .ruler-h, .ruler-v { display: none; }
-            .editor-body { display: block; padding: 0; max-height: none; }
-            .editor { box-shadow: none; border: none; width: auto; height: auto; overflow: visible; }
-        }
+/* ÁREA DEL EDITOR */
+.editor {
+    padding: 20px;
+    outline: none;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-y: auto;
+    background-color: var(--editor-bg-color);
+    color: var(--text-color);
+    width: 100%;
+    min-height: 400px;
+    box-sizing: border-box;
+    --editor-padding-top: 20px;
+}
 
-        /* Estilos predefinidos para el contenido del editor */
-        .editor .style-title {
-            font-family: 'Georgia', serif;
-            font-size: 24px;
-            color: #2c3e50;
-            border-bottom: 2px solid #bdc3c7;
-            padding-bottom: 5px;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-        .editor .style-subtitle {
-            font-family: 'Arial', sans-serif;
-            font-size: 18px;
-            color: #7f8c8d;
-            font-style: italic;
-        }
-        .editor .style-code {
-            font-family: 'Courier New', monospace;
-            background-color: #ecf0f1;
-            border: 1px solid #bdc3c7;
-            border-radius: 4px;
-            padding: 10px;
-            display: block;
-            white-space: pre-wrap;
-        }
+.editor.page-view {
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-color);
+    padding: 2.54cm;
+    --editor-padding-top: 2.54cm;
+    box-sizing: content-box;
+    min-height: auto;
+    overflow: hidden;
+}
 
-        /* BARRA DE ESTADO */
-        .status-bar {
-            padding: 5px 12px;
-            background-color: #f8f9fa;
-            border-top: 1px solid #ddd;
-            font-size: 12px;
-            color: #6c757d;
-            text-align: right;
-        }
+.editor.page-A4 { width: 21cm; height: 29.7cm; }
+.editor.page-Letter { width: 21.59cm; height: 27.94cm; }
+.editor.page-Legal { width: 21.59cm; height: 35.56cm; }
+.editor.page-A5 { width: 14.8cm; height: 21cm; }
 
-        /* ESTILOS DEL MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
+@media print {
+    body { background-color: #fff; }
+    .editor-container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+    .menu-bar, .toolbar, .status-bar, .ruler-h, .ruler-v { display: none; }
+    .editor-body { display: block; padding: 0; max-height: none; }
+    .editor { box-shadow: none; border: none; width: auto; height: auto; overflow: visible; }
+}
 
-        .modal-content {
-            background-color: #fff;
-            width: 80%;
-            max-width: 700px;
-            border-radius: 6px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-        }
+/* Estilos predefinidos */
+.editor .style-title { font-family: 'Georgia', serif; font-size: 24px; color: #2c3e50; border-bottom: 2px solid #bdc3c7; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px; }
+.editor .style-subtitle { font-family: 'Arial', sans-serif; font-size: 18px; color: #7f8c8d; font-style: italic; }
+.editor .style-code { font-family: 'Courier New', monospace; background-color: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 4px; padding: 10px; display: block; white-space: pre-wrap; }
 
-        .modal-header {
-            padding: 12px 16px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h2 { font-size: 16px; margin: 0; }
+/* BARRA DE ESTADO */
+.status-bar {
+    padding: 5px 12px;
+    background-color: var(--menu-bg-color);
+    border-top: 1px solid var(--border-color);
+    font-size: 12px;
+    color: var(--dropdown-shortcut-text-color);
+    text-align: right;
+}
 
-        .close-button {
-            color: #aaa;
-            font-size: 28px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .close-button:hover { color: black; }
+/* ESTILOS DEL MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: var(--modal-overlay-bg-color);
+    justify-content: center;
+    align-items: center;
+}
 
-        #sourceCodeTextarea {
-            width: 100%;
-            height: 400px;
-            border: none;
-            resize: vertical;
-            padding: 10px;
-            box-sizing: border-box;
-            font-family: monospace;
-            font-size: 14px;
-            outline: none;
-        }
+.modal-content {
+    background-color: var(--modal-bg-color);
+    width: 80%;
+    max-width: 700px;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
 
-        .modal-footer {
-            padding: 10px 16px;
-            background-color: #f8f9fa;
-            border-top: 1px solid #ddd;
-            text-align: right;
-        }
+.modal-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--modal-header-bg-color);
+}
+.modal-header h2 { font-size: 16px; margin: 0; color: var(--text-color); }
 
-        .modal-btn {
-            padding: 8px 16px;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-left: 5px;
-        }
-        .modal-btn.primary {
-            background-color: #343a40;
-            color: white;
-            border-color: #343a40;
-        }
+.close-button {
+    color: #aaa;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.close-button:hover { color: var(--text-color); }
+
+#sourceCodeTextarea {
+    width: 100%;
+    height: 400px;
+    border: none;
+    resize: vertical;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: monospace;
+    font-size: 14px;
+    outline: none;
+    background-color: var(--editor-bg-color);
+    color: var(--text-color);
+}
+
+.modal-footer {
+    padding: 10px 16px;
+    background-color: var(--modal-footer-bg-color);
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-left: 5px;
+    background-color: var(--editor-bg-color);
+    color: var(--text-color);
+}
+.modal-btn.primary {
+    background-color: var(--button-primary-bg-color);
+    color: var(--button-primary-text-color);
+    border-color: var(--button-primary-bg-color);
+}

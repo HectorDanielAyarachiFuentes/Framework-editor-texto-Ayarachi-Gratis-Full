@@ -4,6 +4,7 @@
 import { initMenus } from './modules/ui/menus.js';
 import { initTableGrid } from './modules/ui/tableGrid.js';
 import { initSourceCodeModal } from './modules/ui/sourceModal.js';
+import { initTheme } from './modules/ui/theme.js';
 
 // Importaciones de Reglas y Marcadores
 import { initRulers } from './modules/rulers/rulers.js';
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMenus();
     initTableGrid();
     initSourceCodeModal();
+    initTheme();
 
     // Reglas
     initRulers();
