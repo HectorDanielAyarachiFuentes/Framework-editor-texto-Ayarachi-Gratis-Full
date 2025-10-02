@@ -115,7 +115,7 @@
 [data-theme="aero"] .editor-container { background: transparent; border: none; box-shadow: none; }
 [data-theme="aero"] .editor { background-color: var(--editor-bg-color); }
 [data-theme="aero"] body {
-    background-image: url('img.md/aereolinux.png'); /* Fondo por defecto para el efecto */
+    background-image: url('fondos-temas/aereolinux.png'); /* Fondo por defecto para el efecto */
     background-size: cover;
     background-attachment: fixed;
 }
@@ -177,7 +177,7 @@
     --ruler-text-color: #8c5a3b;
 }
 [data-theme="ayarachi"] body {
-    background-image: url('https://www.transparenttextures.com/patterns/rocky-wall.png');
+    background-image: url('fondos-temas/ayarachi.png');
 }
 [data-theme="ayarachi"] .menu-bar,
 [data-theme="ayarachi"] .modal-header,
