@@ -3,8 +3,7 @@
 // Importaciones de UI
 import { initMenus } from './modules/ui/menus.js';
 import { initTableGrid } from './modules/ui/tableGrid.js';
-import { initSourceCodeModal } from './modules/ui/sourceModal.js';
-import { initTheme } from './modules/ui/theme.js';
+import { initSourceCodeModal } from './modules/ui/sourceModal.js'; 
 import { initPdfViewer } from './modules/ui/pdfViewer.js';
 
 // Importaciones de Reglas y Marcadores
@@ -51,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMenus();
     initTableGrid();
     initSourceCodeModal();
-    initPdfViewer();
-    initTheme();
+    initPdfViewer(); 
     loadAppBackground(); // Cargar el fondo de la aplicación
     loadEditorBackground(); // Cargar el fondo del editor
 

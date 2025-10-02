@@ -5,6 +5,7 @@ import { findParentTag, getParagraph } from './utils.js';
 import { openSourceCodeModal } from '../ui/sourceModal.js';
 import { openPdfViewer } from '../ui/pdfViewer.js';
 import { updateMarginMarkersPosition } from '../rulers/marginMarkers.js';
+import { setTheme } from '../ui/theme.js';
 import { closeAllMenus } from '../ui/menus.js';
 
 let editor;
@@ -117,6 +118,10 @@ const actionHandlers = {
             // Guardar la URL en el almacenamiento local
             localStorage.setItem('ayarachiAppBackground', imageUrl);
         }
+    }
+    ,
+    setTheme: (element) => {
+        setTheme(element.dataset.theme);
     }
 };
 
