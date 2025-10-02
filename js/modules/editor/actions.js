@@ -97,6 +97,7 @@ const actionHandlers = {
             editorBody.style.backgroundSize = imageUrl ? 'cover' : '';
             editorBody.style.backgroundRepeat = imageUrl ? 'no-repeat' : '';
             editorBody.style.backgroundPosition = imageUrl ? 'center' : '';
+            localStorage.setItem('ayarachiEditorBackground', imageUrl);
         }
     },
     setAppBackground: () => {
@@ -107,6 +108,8 @@ const actionHandlers = {
             document.body.style.backgroundRepeat = imageUrl ? 'no-repeat' : '';
             document.body.style.backgroundPosition = imageUrl ? 'center' : '';
             document.body.style.backgroundAttachment = imageUrl ? 'fixed' : '';
+            // Guardar la URL en el almacenamiento local
+            localStorage.setItem('ayarachiAppBackground', imageUrl);
         }
     }
 };
