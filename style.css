@@ -115,7 +115,7 @@
 [data-theme="aero"] .editor-container { background: transparent; border: none; box-shadow: none; }
 [data-theme="aero"] .editor { background-color: var(--editor-bg-color); }
 [data-theme="aero"] body {
-    background-image: url('https://i.imgur.com/O5gBD3C.jpg'); /* Fondo por defecto para el efecto */
+    background-image: url('img.md/aereolinux.png'); /* Fondo por defecto para el efecto */
     background-size: cover;
     background-attachment: fixed;
 }
