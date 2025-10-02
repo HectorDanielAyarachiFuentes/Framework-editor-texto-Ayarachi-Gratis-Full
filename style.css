@@ -38,7 +38,7 @@
     --menu-hover-bg-color: #4a4a4a;
     --dropdown-bg-color: #404040; /* Un poco más claro que el fondo del menú */
     --dropdown-hover-bg-color: #555;
-    --dropdown-text-color: #f1f1f1;
+    --dropdown-text-color: #000000;
     --dropdown-shortcut-text-color: #aaa;
     --icon-color: #ccc;
     --separator-color: #555;
