@@ -1,7 +1,7 @@
 // js/modules/ui/pdfViewer.js
 
 let modal, pdfCanvas, pdfCtx, annotationCanvas, annotationCtx, closeButton, prevButton, nextButton, pageInfo;
-let drawToolBtn, drawColorInput, drawWidthSelect, clearPageBtn, downloadBtn, zoomInBtn, zoomOutBtn, zoomLevelDisplay;
+let selectToolBtn, textToolBtn, drawToolBtn, drawColorInput, drawWidthSelect, clearPageBtn, downloadBtn, zoomInBtn, zoomOutBtn, zoomLevelDisplay;
 
 let pdfDoc = null;
 let pageNum = 1;
@@ -10,10 +10,16 @@ let pageNumPending = null;
 let currentScale = 1.5;
 
 // Estado de las anotaciones
-let annotations = {}; // Guardará los dibujos por número de página
+let annotations = {}; // Guardará los objetos de anotación por página.
+
+// Estado de la interacción
 let isDrawing = false;
-let lastX = 0;
-let lastY = 0;
+let isDragging = false;
+let currentTool = 'select'; // 'select', 'draw', o 'text'
+let currentPath = [];
+let selectedObject = null;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
 
 function getCanvasOffset(canvas) {
     const rect = canvas.getBoundingClientRect();
@@ -116,7 +122,7 @@ async function downloadPdfWithAnnotations() {
     saveAnnotations(pageNum);
 
     const { jsPDF } = window.jspdf;
-    let newPdf;
+    let newPdf = null;
 
     for (let i = 1; i <= pdfDoc.numPages; i++) {
         const page = await pdfDoc.getPage(i);
@@ -129,12 +135,11 @@ async function downloadPdfWithAnnotations() {
         await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
         // Si hay anotaciones para esta página, dibujarlas sobre el canvas
-        if (annotations[i]) {
-            const img = new Image();
-            img.src = annotations[i];
-            await new Promise(resolve => img.onload = resolve);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        }
+        const pageAnnotations = annotations[i] || [];
+        // Clonamos el contexto para no afectar el original
+        const tempAnnotationCanvas = document.createElement('canvas');
+        await renderAnnotationsToContext(pageAnnotations, tempAnnotationCanvas.getContext('2d'), canvas.width, canvas.height);
+        ctx.drawImage(tempAnnotationCanvas, 0, 0, canvas.width, canvas.height);
 
         const imgData = canvas.toDataURL('image/png');
         const orientation = canvas.width > canvas.height ? 'l' : 'p';
@@ -148,66 +153,229 @@ async function downloadPdfWithAnnotations() {
 
 // --- Lógica de Anotaciones ---
 
-function startDrawing(e) {
-    isDrawing = true;
-    const offset = getCanvasOffset(annotationCanvas);
-    [lastX, lastY] = [e.clientX - offset.left, e.clientY - offset.top];
-}
-
-function draw(e) {
-    if (!isDrawing) return;
+function getMousePos(e) {
     const offset = getCanvasOffset(annotationCanvas);
     const currentX = e.clientX - offset.left;
     const currentY = e.clientY - offset.top;
-
-    annotationCtx.beginPath();
-    annotationCtx.moveTo(lastX, lastY);
-    annotationCtx.lineTo(currentX, currentY);
-    annotationCtx.strokeStyle = drawColorInput.value;
-    annotationCtx.lineWidth = drawWidthSelect.value;
-    annotationCtx.lineCap = 'round';
-    annotationCtx.stroke();
-
-    [lastX, lastY] = [currentX, currentY];
+    return { x: currentX, y: currentY };
 }
 
-function stopDrawing() {
-    isDrawing = false;
-}
+function handleMouseDown(e) {
+    const pos = getMousePos(e);
 
-function saveAnnotations(pageNumber) {
-    if (annotationCanvas.width > 0) {
-        annotations[pageNumber] = annotationCanvas.toDataURL();
+    if (currentTool === 'select') {
+        selectedObject = findObjectAt(pos.x, pos.y);
+        if (selectedObject) {
+            isDragging = true;
+            dragOffsetX = pos.x - selectedObject.x;
+            dragOffsetY = pos.y - selectedObject.y;
+        }
+        redrawAnnotations(pageNum);
+    } else if (currentTool === 'draw') {
+        isDrawing = true;
+        currentPath = [{ x: pos.x, y: pos.y }];
     }
 }
 
-function redrawAnnotations(pageNumber) {
-    clearAnnotations();
-    if (annotations[pageNumber]) {
-        const img = new Image();
-        img.onload = function() {
-            annotationCtx.drawImage(img, 0, 0);
-        };
-        img.src = annotations[pageNumber];
+function handleMouseMove(e) {
+    if (isDrawing && currentTool === 'draw') {
+        const pos = getMousePos(e);
+        currentPath.push({ x: pos.x, y: pos.y });
+        redrawAnnotations(pageNum); // Redibuja todo + el camino actual
+    } else if (isDragging && selectedObject && currentTool === 'select') {
+        const pos = getMousePos(e);
+        selectedObject.x = pos.x - dragOffsetX;
+        selectedObject.y = pos.y - dragOffsetY;
+        redrawAnnotations(pageNum);
     }
 }
 
-function clearAnnotations() {
+function handleMouseUp() {
+    if (isDrawing && currentTool === 'draw') {
+        isDrawing = false;
+        if (currentPath.length > 1) {
+            if (!annotations[pageNum]) annotations[pageNum] = [];
+            annotations[pageNum].push({
+                type: 'path',
+                points: currentPath,
+                color: drawColorInput.value,
+                width: drawWidthSelect.value
+            });
+        }
+        currentPath = [];
+    } else if (isDragging) {
+        isDragging = false;
+    }
+    redrawAnnotations(pageNum);
+}
+
+function handleMouseClick(e) {
+    if (currentTool === 'text') {
+        const text = prompt("Introduce el texto que quieres añadir:");
+        if (!text) return;
+
+        const pos = getMousePos(e);
+        const fontSize = drawWidthSelect.value * 5;
+
+        if (!annotations[pageNum]) annotations[pageNum] = [];
+        annotations[pageNum].push({
+            type: 'text',
+            content: text,
+            x: pos.x,
+            y: pos.y,
+            font: `${fontSize}px Arial`,
+            color: drawColorInput.value
+        });
+        redrawAnnotations(pageNum);
+    }
+}
+
+function handleDoubleClick(e) {
+    if (currentTool === 'select' && selectedObject && selectedObject.type === 'text') {
+        const newText = prompt("Edita el texto:", selectedObject.content);
+        if (newText !== null) {
+            selectedObject.content = newText;
+            redrawAnnotations(pageNum);
+        }
+    }
+}
+
+function handleKeyDown(e) {
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedObject) {
+            const pageAnnotations = annotations[pageNum] || [];
+            const index = pageAnnotations.indexOf(selectedObject);
+            if (index > -1) {
+                pageAnnotations.splice(index, 1);
+                selectedObject = null;
+                redrawAnnotations(pageNum);
+            }
+        }
+    }
+}
+
+function findObjectAt(x, y) {
+    const pageAnnotations = annotations[pageNum] || [];
+    // Iterar en orden inverso para seleccionar el objeto de encima
+    for (let i = pageAnnotations.length - 1; i >= 0; i--) {
+        const obj = pageAnnotations[i];
+        if (obj.type === 'text') {
+            // Medir el texto para crear un bounding box
+            annotationCtx.font = obj.font;
+            const metrics = annotationCtx.measureText(obj.content);
+            const height = parseInt(obj.font, 10); // Aproximación de la altura
+            if (x >= obj.x && x <= obj.x + metrics.width && y >= obj.y && y <= obj.y + height) {
+                return obj;
+            }
+        }
+        // La detección de clics en 'path' es más compleja y se omite por ahora
+    }
+    return null;
+}
+
+function saveAnnotations() {
+    // Las anotaciones ya se guardan en el objeto `annotations` en tiempo real.
+    // Esta función se mantiene por si se necesita lógica adicional en el futuro.
+}
+
+async function renderAnnotationsToContext(pageAnnotations, ctx, width, height) {
+    ctx.clearRect(0, 0, width, height);
+    for (const obj of pageAnnotations) {
+        if (obj.type === 'path') {
+            ctx.beginPath();
+            ctx.moveTo(obj.points[0].x, obj.points[0].y);
+            for (let i = 1; i < obj.points.length; i++) {
+                ctx.lineTo(obj.points[i].x, obj.points[i].y);
+            }
+            ctx.strokeStyle = obj.color;
+            ctx.lineWidth = obj.width;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        } else if (obj.type === 'text') {
+            ctx.font = obj.font;
+            ctx.fillStyle = obj.color;
+            ctx.textBaseline = 'top';
+            ctx.fillText(obj.content, obj.x, obj.y);
+        }
+    }
+}
+
+async function redrawAnnotations(pageNumber) {
     annotationCtx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
+    const pageAnnotations = annotations[pageNumber] || [];
+    
+    await renderAnnotationsToContext(pageAnnotations, annotationCtx, annotationCanvas.width, annotationCanvas.height);
+
+    // Dibujar el path actual si se está dibujando
+    if (isDrawing && currentPath.length > 1) {
+        annotationCtx.beginPath();
+        annotationCtx.moveTo(currentPath[0].x, currentPath[0].y);
+        for (let i = 1; i < currentPath.length; i++) {
+            annotationCtx.lineTo(currentPath[i].x, currentPath[i].y);
+        }
+        annotationCtx.strokeStyle = drawColorInput.value;
+        annotationCtx.lineWidth = drawWidthSelect.value;
+        annotationCtx.lineCap = 'round';
+        annotationCtx.stroke();
+    }
+
+    // Resaltar el objeto seleccionado
+    if (selectedObject && selectedObject.type === 'text') {
+        annotationCtx.font = selectedObject.font;
+        const metrics = annotationCtx.measureText(selectedObject.content);
+        const height = parseInt(selectedObject.font, 10);
+        annotationCtx.strokeStyle = 'rgba(0, 100, 255, 0.7)';
+        annotationCtx.lineWidth = 2;
+        annotationCtx.strokeRect(selectedObject.x - 2, selectedObject.y - 2, metrics.width + 4, height + 4);
+    }
 }
 
 function clearCurrentPage() {
     if (confirm('¿Estás seguro de que quieres borrar todas las anotaciones de esta página?')) {
-        clearAnnotations();
+        annotations[pageNum] = [];
+        selectedObject = null;
         delete annotations[pageNum];
+        redrawAnnotations(pageNum);
     }
 }
 
+function setTool(tool) {
+    currentTool = tool;
+    if (tool === 'draw') {
+        drawToolBtn.classList.add('active');
+        textToolBtn.classList.remove('active');
+        selectToolBtn.classList.remove('active');
+        annotationCanvas.style.cursor = 'crosshair';
+    } else if (tool === 'text') {
+        textToolBtn.classList.add('active');
+        drawToolBtn.classList.remove('active');
+        selectToolBtn.classList.remove('active');
+        annotationCanvas.style.cursor = 'text';
+    } else if (tool === 'select') {
+        selectToolBtn.classList.add('active');
+        textToolBtn.classList.remove('active');
+        drawToolBtn.classList.remove('active');
+        annotationCanvas.style.cursor = 'default';
+    }
+    selectedObject = null;
+    redrawAnnotations(pageNum);
+}
+
 function setupAnnotationListeners() {
-    annotationCanvas.addEventListener('mousedown', startDrawing);
-    annotationCanvas.addEventListener('mousemove', draw);
-    annotationCanvas.addEventListener('mouseup', stopDrawing);
-    annotationCanvas.addEventListener('mouseout', stopDrawing);
+    annotationCanvas.addEventListener('mousedown', handleMouseDown);
+    annotationCanvas.addEventListener('mousemove', handleMouseMove);
+    annotationCanvas.addEventListener('mouseup', handleMouseUp);
+    annotationCanvas.addEventListener('mouseout', handleMouseUp); // Termina la acción si el ratón sale
+    annotationCanvas.addEventListener('click', handleMouseClick);
+    annotationCanvas.addEventListener('dblclick', handleDoubleClick);
+    
+    // Listener de teclado en la ventana para la tecla Supr
+    window.addEventListener('keydown', handleKeyDown);
+
+    selectToolBtn.addEventListener('click', () => setTool('select'));
+    textToolBtn.addEventListener('click', () => setTool('text'));
+    drawToolBtn.addEventListener('click', () => setTool('draw'));
+
     clearPageBtn.addEventListener('click', clearCurrentPage);
 }
 
@@ -221,7 +389,8 @@ export function openPdfViewer(pdfData) {
         pdfDoc = pdf;
         pageNum = 1;
         annotations = {}; // Limpiar anotaciones al abrir un nuevo PDF
-        renderPage(pageNum);
+        selectedObject = null;
+        queueRenderPage(pageNum);
         modal.style.display = 'flex';
     }, function (reason) {
         console.error(reason);
@@ -241,6 +410,8 @@ export function initPdfViewer() {
     nextButton = document.getElementById('pdfNextPage');
     pageInfo = document.getElementById('pdfPageInfo');
 
+    selectToolBtn = document.getElementById('pdfSelectTool');
+    textToolBtn = document.getElementById('pdfTextTool');
     drawToolBtn = document.getElementById('pdfDrawTool');
     drawColorInput = document.getElementById('pdfDrawColor');
     drawWidthSelect = document.getElementById('pdfDrawWidth');
@@ -256,5 +427,7 @@ export function initPdfViewer() {
     downloadBtn.addEventListener('click', downloadPdfWithAnnotations);
     zoomInBtn.addEventListener('click', zoomIn);
     zoomOutBtn.addEventListener('click', zoomOut);
+
     setupAnnotationListeners();
+    setTool('select'); // Herramienta inicial
 }
