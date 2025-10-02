@@ -23,6 +23,7 @@
                 <span class="menu-button">Archivo</span>
                 <div class="dropdown-menu">
                     <a href="#" class="dropdown-item" data-action="newDocument"><div><i class="fa-regular fa-file"></i> Nuevo documento</div></a>
+                    <a href="#" class="dropdown-item" data-action="openFile"><div><i class="fa-regular fa-folder-open"></i> Abrir archivo...</div></a>
                     <div class="dropdown-item has-submenu">
                         <div><i class="fa-regular fa-file-lines"></i> Tamaño de página</div><i class="fa-solid fa-chevron-right"></i>
                         <div class="submenu">
@@ -230,8 +231,58 @@
         </div>
     </div>
 
-    
+    <!-- MODAL PARA VISUALIZAR PDF -->
+    <div id="pdfViewerModal" class="modal">
+        <div class="modal-content" style="width: 90%; max-width: 800px; height: 90vh;">
+            <div class="modal-header">
+                <h2 id="pdfViewerTitle">Visor de PDF</h2>
+                <button id="closePdfViewer" class="close-button">&times;</button>
+            </div>
+            <div class="pdf-viewer-tools">
+                <button id="pdfDrawTool" class="toolbar-button active" title="Dibujar"><i class="fa-solid fa-pencil"></i></button>
+                <div class="toolbar-color-picker" title="Color del lápiz">
+                    <i class="fa-solid fa-palette"></i>
+                    <input type="color" id="pdfDrawColor" value="#ff0000">
+                </div>
+                <select id="pdfDrawWidth" class="toolbar-select" title="Grosor del lápiz">
+                    <option value="1">Fino</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="5">Grueso</option>
+                </select>
+                <button id="pdfClearPage" class="toolbar-button" title="Borrar página"><i class="fa-solid fa-eraser"></i></button>
+                <div class="toolbar-separator"></div>
+                <button id="pdfZoomOut" class="toolbar-button" title="Alejar"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                <span id="pdfZoomLevel" style="width: 50px; text-align: center; font-size: 14px; color: var(--text-color);">100%</span>
+                <button id="pdfZoomIn" class="toolbar-button" title="Acercar"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <div class="toolbar-separator"></div>
+                <button id="pdfDownload" class="toolbar-button" title="Descargar PDF con anotaciones"><i class="fa-solid fa-download"></i></button>
+            </div>
+            <div class="pdf-viewer-body">
+                <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
+                <canvas id="annotationCanvas" class="pdf-canvas"></canvas>
+            </div>
+            <div class="modal-footer" style="justify-content: center; display: flex; align-items: center; gap: 20px;">
+                <button id="pdfPrevPage" class="modal-btn"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                <span id="pdfPageInfo">Página 0 / 0</span>
+                <button id="pdfNextPage" class="modal-btn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Input oculto para abrir archivos -->
+    <input type="file" id="file-opener" style="display: none;" accept=".docx,.doc,.pdf">
+
+    
+    <!-- Biblioteca para leer archivos .docx -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- Biblioteca para leer archivos .pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- Biblioteca para crear y guardar PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Especificar la ruta del worker para PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
 </body>
     <script type="module" src="js/app.js"></script> 
 </html>

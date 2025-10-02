@@ -3,6 +3,7 @@ import { executeCommand } from './commands.js';
 import { updateWordCount } from '../rulers/wordCount.js';
 import { findParentTag, getParagraph } from './utils.js';
 import { openSourceCodeModal } from '../ui/sourceModal.js';
+import { openPdfViewer } from '../ui/pdfViewer.js';
 import { updateMarginMarkersPosition } from '../rulers/marginMarkers.js';
 import { closeAllMenus } from '../ui/menus.js';
 
@@ -14,6 +15,11 @@ const actionHandlers = {
             editor.innerHTML = '<p>¡Bienvenido a Ayarachi!</p>';
             updateWordCount();
         }
+    },
+    openFile: () => {
+        // Dispara el input de archivo oculto
+        const fileOpener = document.getElementById('file-opener');
+        if (fileOpener) fileOpener.click();
     },
     fullscreen: () => {
         if (!document.fullscreenElement) {
@@ -115,6 +121,52 @@ const actionHandlers = {
 };
 
 /**
+ * Inicializa el manejador para el input de abrir archivo.
+ */
+function initFileOpener() {
+    const fileOpener = document.getElementById('file-opener');
+    editor = document.getElementById('editor');
+
+    if (!fileOpener) return;
+
+    fileOpener.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const fileName = file.name.toLowerCase();
+
+        if (fileName.endsWith('.docx')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const arrayBuffer = e.target.result;
+                // mammoth is available globally from the script tag in index.html
+                mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                    .then(result => {
+                        editor.innerHTML = result.value;
+                        updateWordCount();
+                    })
+                    .catch(err => {
+                        console.error("Error al procesar el archivo .docx:", err);
+                        alert("Hubo un error al intentar leer el archivo .docx.");
+                    });
+            };
+            reader.readAsArrayBuffer(file);
+        } else if (fileName.endsWith('.pdf')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                openPdfViewer(e.target.result);
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            alert('Tipo de archivo no soportado. Solo se pueden abrir archivos .docx y .pdf.');
+        }
+
+        // Limpiar el valor para poder abrir el mismo archivo de nuevo
+        event.target.value = '';
+    });
+}
+
+/**
  * Inicializa los listeners para todos los elementos con `data-action`.
  */
 export function initActions() {
@@ -129,4 +181,6 @@ export function initActions() {
             closeAllMenus();
         });
     });
+
+    initFileOpener();
 }

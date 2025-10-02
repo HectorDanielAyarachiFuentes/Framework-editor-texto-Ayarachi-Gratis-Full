@@ -557,3 +557,40 @@ body.is-dragging {
     color: var(--button-primary-text-color);
     border-color: var(--button-primary-bg-color);
 }
+
+/* Estilos específicos para el visor de PDF */
+.pdf-viewer-tools {
+    padding: 8px 12px;
+    background-color: var(--modal-header-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pdf-viewer-tools .toolbar-button.active {
+    background-color: var(--menu-hover-bg-color);
+    border: 1px solid var(--border-color);
+}
+
+.pdf-viewer-body {
+    position: relative;
+    flex-grow: 1;
+    overflow: auto;
+    background: #525659;
+    text-align: center;
+    padding: 10px;
+}
+
+.pdf-canvas {
+    /* position: absolute; ya no es necesario con el nuevo contenedor */
+    /* top: 10px; */
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#annotationCanvas {
+    position: absolute; /* El canvas de anotación se superpone */
+    z-index: 1;
+}
