@@ -99,7 +99,7 @@
     --menu-hover-bg-color: rgba(60, 140, 255, 0.7); /* Azul brillante translúcido en hover */
     --dropdown-bg-color: rgba(25, 25, 25, 0.8); /* Más oscuro y opaco para legibilidad */
     --dropdown-hover-bg-color: rgba(50, 50, 50, 0.8);
-    --dropdown-text-color: #f1f1f1;
+    --dropdown-text-color: #000000;
     --modal-bg-color: rgba(40, 40, 40, 0.7);
     --modal-header-bg-color: rgba(50, 50, 50, 0.6);
     --modal-footer-bg-color: rgba(50, 50, 50, 0.6);
