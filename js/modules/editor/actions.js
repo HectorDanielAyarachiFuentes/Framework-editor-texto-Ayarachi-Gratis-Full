@@ -88,6 +88,16 @@ const actionHandlers = {
             editor.classList.add('page-view', `page-${size}`);
         }
         updateMarginMarkersPosition();
+    },
+    setPageBackground: () => {
+        const editorBody = document.querySelector('.editor-body');
+        const imageUrl = prompt('Introduce la URL de la imagen de fondo (deja en blanco para quitarla):');
+        if (imageUrl !== null) { // Permite una cadena vacía para eliminar la imagen
+            editorBody.style.backgroundImage = imageUrl ? `url('${imageUrl}')` : '';
+            editorBody.style.backgroundSize = imageUrl ? 'cover' : '';
+            editorBody.style.backgroundRepeat = imageUrl ? 'no-repeat' : '';
+            editorBody.style.backgroundPosition = imageUrl ? 'center' : '';
+        }
     }
 };
 

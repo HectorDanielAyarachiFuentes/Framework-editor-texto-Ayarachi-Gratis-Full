@@ -319,6 +319,11 @@ body.is-dragging {
     overflow: auto;
     max-height: 70vh;
 }
+/* Cuando el cuerpo del editor tiene una imagen, el editor se vuelve semitransparente */
+.editor-body[style*="background-image"] .editor {
+    background-color: rgba(255, 255, 255, 0.85); /* Blanco semitransparente */
+}
+
 
 /* ESTILOS PARA LAS REGLAS */
 .ruler-h, .ruler-v {
@@ -451,7 +456,13 @@ body.is-dragging {
     .editor-container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
     .menu-bar, .toolbar, .status-bar, .ruler-h, .ruler-v { display: none; }
     .editor-body { display: block; padding: 0; max-height: none; }
+    .editor-body { background-image: none !important; }
     .editor { box-shadow: none; border: none; width: auto; height: auto; overflow: visible; }
+    .editor {
+        background-image: none !important;
+        -webkit-print-color-adjust: exact; /* Necesario en algunos navegadores para forzar estilos */
+        print-color-adjust: exact;
+    }
 }
 
 /* Estilos predefinidos */
