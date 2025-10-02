@@ -217,6 +217,12 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* Transiciones suaves para todos los elementos que cambian de color con el tema */
+.menu-bar, .toolbar, .editor, .modal-content, .dropdown-menu, .ruler-h, .ruler-v, .status-bar, .toolbar-button, .toolbar-select, .modal-btn {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+
 /* Estilo global durante el arrastre de sangría */
 body.is-dragging {
     cursor: ew-resize;
@@ -380,6 +386,91 @@ body.is-dragging {
     font-size: 12px;
     color: #666;
 }
+
+/* VISTA PREVIA DE TEMAS */
+.theme-preview-container {
+    width: 32px;
+    height: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    margin-left: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dropdown-bg-color);
+}
+
+.theme-preview-container > div {
+    width: 28px;
+    height: 20px;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.theme-preview-container > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px; /* Simula una barra de título */
+}
+
+/* Tema Claro */
+.theme-preview-light { background-color: #fff; position: relative; }
+.theme-preview-light::before { background-color: #f8f9fa; }
+.theme-preview-light::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: #555; /* Simula una línea de texto oscuro */
+    top: 10px;
+    left: 5px;
+    border-radius: 1px;
+}
+
+/* Tema Oscuro (Mejorado) */
+.theme-preview-dark { background-color: #3a3a3a; position: relative; }
+.theme-preview-dark::before { background-color: #555; }
+.theme-preview-dark::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: #aaa; /* Simula una línea de texto */
+    top: 10px;
+    left: 5px;
+    border-radius: 1px;
+}
+
+/* Tema Windows XP */
+.theme-preview-xp { background-color: #fff; }
+.theme-preview-xp::before { background: linear-gradient(to right, #0055E4, #3B8CF3); }
+
+/* Tema Aero Linux */
+.theme-preview-aero { background-color: rgba(20, 20, 20, 0.8); border: 1px solid rgba(255,255,255,0.1); }
+.theme-preview-aero::before { background-color: rgba(30, 30, 30, 0.6); }
+
+/* Tema Windows 11 (Mejorado) */
+.theme-preview-win11 {
+    background-color: #f9f9f9; /* Fondo del panel */
+    position: relative;
+}
+.theme-preview-win11::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 8px; /* Ancho del panel lateral */
+    height: 100%;
+    background-color: #0078d4; /* Azul característico */
+}
+
+/* Tema Ayarachi Inca */
+.theme-preview-ayarachi { background-color: #fdf6e3; }
+.theme-preview-ayarachi::before { background-color: #8c5a3b; }
 
 /* BARRA DE HERRAMIENTAS */
 .toolbar {
