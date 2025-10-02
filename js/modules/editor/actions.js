@@ -98,6 +98,16 @@ const actionHandlers = {
             editorBody.style.backgroundRepeat = imageUrl ? 'no-repeat' : '';
             editorBody.style.backgroundPosition = imageUrl ? 'center' : '';
         }
+    },
+    setAppBackground: () => {
+        const imageUrl = prompt('Introduce la URL de la imagen de fondo para la aplicación (deja en blanco para quitarla):');
+        if (imageUrl !== null) { // Permite una cadena vacía para eliminar la imagen
+            document.body.style.backgroundImage = imageUrl ? `url('${imageUrl}')` : '';
+            document.body.style.backgroundSize = imageUrl ? 'cover' : '';
+            document.body.style.backgroundRepeat = imageUrl ? 'no-repeat' : '';
+            document.body.style.backgroundPosition = imageUrl ? 'center' : '';
+            document.body.style.backgroundAttachment = imageUrl ? 'fixed' : '';
+        }
     }
 };
 
