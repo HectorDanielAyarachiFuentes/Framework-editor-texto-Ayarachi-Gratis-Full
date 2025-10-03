@@ -1,0 +1,843 @@
+/* ESTILOS CSS PARA EL EDITOR DE TEXTO RICO */
+
+/* Definición de variables de color para temas */
+:root {
+    --bg-color: #f4f4f9;
+    --editor-bg-color: #fff;
+    --text-color: #333;
+    --border-color: #ddd;
+    --menu-bg-color: #f8f9fa;
+    --menu-hover-bg-color: #e9ecef;
+    --dropdown-bg-color: white;
+    --dropdown-hover-bg-color: #f1f3f5;
+    --dropdown-text-color: #333;
+    --dropdown-shortcut-text-color: #6c757d;
+    --icon-color: #555;
+    --separator-color: #ddd;
+    --modal-bg-color: #fff;
+    --modal-header-bg-color: #f8f9fa;
+    --modal-footer-bg-color: #f8f9fa;
+    --modal-overlay-bg-color: rgba(0,0,0,0.5);
+    --button-primary-bg-color: #343a40;
+    --button-primary-text-color: white;
+    --ruler-bg-color: #fdfdfd;
+    --ruler-text-color: #6c757d;
+    --ruler-mark-1-color: #ccc;
+    --ruler-mark-2-color: #999;
+    --ruler-mark-3-color: #555;
+    --indent-marker-bg-color: #6a7f9e;
+    --indent-marker-border-color: #3b4d69;
+}
+
+[data-theme="dark"] {
+    --bg-color: #2c2c2c;
+    --editor-bg-color: #3a3a3a;
+    --text-color: #f1f1f1;
+    --border-color: #555;
+    --menu-bg-color: #333;
+    --menu-hover-bg-color: #4a4a4a;
+    --dropdown-bg-color: #404040; /* Un poco más claro que el fondo del menú */
+    --dropdown-hover-bg-color: #555;
+    --dropdown-text-color: #000000;
+    --dropdown-shortcut-text-color: #aaa;
+    --icon-color: #ccc;
+    --separator-color: #555;
+    --modal-bg-color: #3a3a3a;
+    --modal-header-bg-color: #333;
+    --modal-footer-bg-color: #333;
+    --modal-overlay-bg-color: rgba(0,0,0,0.7);
+    --button-primary-bg-color: #555;
+    --button-primary-text-color: #f1f1f1;
+    --ruler-bg-color: #3a3a3a;
+    --ruler-text-color: #aaa;
+    --ruler-mark-1-color: #666;
+    --ruler-mark-2-color: #888;
+    --ruler-mark-3-color: #aaa;
+    --indent-marker-bg-color: #8a9bb8;
+    --indent-marker-border-color: #5c6a82;
+}
+
+/* TEMA: Windows XP */
+[data-theme="xp"] {
+    --bg-color: #3A6EA5;
+    --editor-bg-color: #fff;
+    --text-color: #000;
+    --border-color: #99B4D1;
+    --menu-bg-color: #ECE9D8;
+    --menu-hover-bg-color: #316AC5; /* Azul XP en hover */
+    --dropdown-bg-color: #f5f4f0; /* Un beige más claro para el dropdown */
+    --dropdown-hover-bg-color: #316AC5;
+    --dropdown-text-color: #000;
+    --dropdown-shortcut-text-color: #555;
+    --icon-color: #000;
+    --modal-bg-color: #ECE9D8;
+    --modal-header-bg-color: linear-gradient(to right, #0055E4, #3B8CF3);
+    --modal-footer-bg-color: #ECE9D8;
+    --button-primary-bg-color: #245EDC;
+    --button-primary-text-color: white;
+    --ruler-bg-color: #ECE9D8;
+}
+[data-theme="xp"] body { font-family: 'Tahoma', sans-serif; }
+[data-theme="xp"] .menu-button:hover, [data-theme="xp"] .dropdown-item:hover { color: white; }
+[data-theme="xp"] .modal-header h2, [data-theme="xp"] .modal-header .close-button { color: white; text-shadow: 1px 1px #000; }
+[data-theme="xp"] .toolbar-button, [data-theme="xp"] .modal-btn {
+    border: 1px solid #003C74;
+    background-color: #D4D0C8;
+    box-shadow: inset -1px -1px 0px #404040, inset 1px 1px 0px #FFFFFF;
+    border-style: outset;
+}
+[data-theme="xp"] .toolbar-button:hover, [data-theme="xp"] .modal-btn:hover { background-color: #e1e1e1; }
+[data-theme="xp"] .toolbar-button:active, [data-theme="xp"] .modal-btn:active { border-style: inset; }
+
+/* TEMA: Aero Linux (Glassmorphism) */
+[data-theme="aero"] {
+    --bg-color: #222;
+    --editor-bg-color: rgba(20, 20, 20, 0.8);
+    --text-color: #f1f1f1;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --menu-bg-color: rgba(30, 30, 30, 0.6);
+    --menu-hover-bg-color: rgba(60, 140, 255, 0.7); /* Azul brillante translúcido en hover */
+    --dropdown-bg-color: rgba(25, 25, 25, 0.8); /* Más oscuro y opaco para legibilidad */
+    --dropdown-hover-bg-color: rgba(50, 50, 50, 0.8);
+    --dropdown-text-color: #000000;
+    --modal-bg-color: rgba(40, 40, 40, 0.7);
+    --modal-header-bg-color: rgba(50, 50, 50, 0.6);
+    --modal-footer-bg-color: rgba(50, 50, 50, 0.6);
+}
+[data-theme="aero"] .menu-bar,
+[data-theme="aero"] .toolbar,
+[data-theme="aero"] .dropdown-menu,
+[data-theme="aero"] .modal-content {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+[data-theme="aero"] .editor-container { background: transparent; border: none; box-shadow: none; }
+[data-theme="aero"] .editor { background-color: var(--editor-bg-color); }
+[data-theme="aero"] body {
+    background-image: url('fondos-temas/aereolinux.png'); /* Fondo por defecto para el efecto */
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* TEMA: Windows 11 */
+[data-theme="win11"] {
+    --bg-color: #f3f3f3;
+    --editor-bg-color: #ffffff;
+    --text-color: #1c1c1c;
+    --border-color: #e5e5e5;
+    --menu-bg-color: #f9f9f9;
+    --menu-hover-bg-color: #e9e9e9; /* Gris claro en hover */
+    --dropdown-bg-color: #ffffff; /* Blanco puro para el dropdown */
+    --dropdown-hover-bg-color: #f0f0f0;
+    --modal-bg-color: #fdfdfd;
+    --modal-header-bg-color: #f9f9f9;
+    --modal-footer-bg-color: #f9f9f9;
+    --button-primary-bg-color: #0078d4;
+}
+[data-theme="win11"] .editor-container,
+[data-theme="win11"] .dropdown-menu,
+[data-theme="win11"] .toolbar-button,
+[data-theme="win11"] .toolbar-select,
+[data-theme="win11"] .modal-content,
+[data-theme="win11"] .modal-btn {
+    border-radius: 8px;
+}
+[data-theme="win11"] .editor-container {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+[data-theme="win11"] .toolbar-button, [data-theme="win11"] .toolbar-select {
+    border: 1px solid transparent;
+}
+[data-theme="win11"] .toolbar-button:hover, [data-theme="win11"] .toolbar-select:hover {
+    background-color: var(--menu-hover-bg-color);
+    border-color: transparent;
+}
+[data-theme="win11"] .menu-bar { padding: 8px 12px; }
+[data-theme="win11"] .menu-button { border-radius: 4px; }
+
+/* TEMA: Ayarachi Inca */
+[data-theme="ayarachi"] {
+    --bg-color: #4a2c2a; /* Marrón tierra oscuro */
+    --editor-bg-color: #fdf6e3; /* Crema pálido como papiro */
+    --text-color: #3d2b1f; /* Marrón oscuro para texto */
+    --border-color: #c89c5b; /* Dorado antiguo */
+    --menu-bg-color: #8c5a3b; /* Marrón medio */
+    --menu-hover-bg-color: #c89c5b; /* Dorado en hover */
+    --dropdown-bg-color: #fbf0d9; /* Un crema más cálido para el dropdown */
+    --dropdown-hover-bg-color: #f5e9c9;
+    --dropdown-text-color: #3d2b1f;
+    --icon-color: #c89c5b;
+    --modal-bg-color: #fdf6e3;
+    --modal-header-bg-color: #8c5a3b;
+    --modal-footer-bg-color: #8c5a3b;
+    --button-primary-bg-color: #c89c5b;
+    --button-primary-text-color: #3d2b1f;
+    --ruler-bg-color: #f5e9c9;
+    --ruler-text-color: #8c5a3b;
+}
+[data-theme="ayarachi"] body {
+    background-image: url('fondos-temas/ayarachi.png');
+}
+[data-theme="ayarachi"] .menu-bar,
+[data-theme="ayarachi"] .modal-header,
+[data-theme="ayarachi"] .modal-footer {
+    border-bottom: 2px solid var(--border-color);
+    border-top: 2px solid var(--border-color);
+}
+[data-theme="ayarachi"] .menu-button,
+[data-theme="ayarachi"] .modal-header h2 {
+    font-family: 'Cinzel', serif; /* Se mantiene la fuente temática */
+    font-weight: 700;
+    color: #fdf6e3;
+}
+[data-theme="ayarachi"] .toolbar-button i,
+[data-theme="ayarachi"] .dropdown-item i {
+    color: var(--icon-color);
+}
+[data-theme="ayarachi"] .toolbar-button:hover,
+[data-theme="ayarachi"] .toolbar-select:hover {
+    background-color: #e8d9b7;
+}
+[data-theme="ayarachi"] .editor-container {
+    border: 3px solid var(--border-color);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* ESTILOS GENERALES */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Transiciones suaves para todos los elementos que cambian de color con el tema */
+.menu-bar, .toolbar, .editor, .modal-content, .dropdown-menu, .ruler-h, .ruler-v, .status-bar, .toolbar-button, .toolbar-select, .modal-btn {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+
+/* Estilo global durante el arrastre de sangría */
+body.is-dragging {
+    cursor: ew-resize;
+    user-select: none; /* Evita la selección de texto accidental */
+}
+
+/* CONTENEDOR DEL EDITOR */
+.editor-container {
+    width: 90%;
+    max-width: 850px;
+    background-color: var(--editor-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 6px; /* overflow: hidden se movió a .editor-main-area */
+}
+
+/* BARRA DE MENÚ */
+.menu-bar {
+    padding: 4px 12px;
+    background-color: var(--menu-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 5px;
+    font-size: 14px;
+    position: relative; /* Necesario para que z-index funcione */
+    z-index: 10; /* Asegura que la barra de menú y sus dropdowns estén por encima de otros elementos */
+}
+
+.menu-item {
+    position: relative;
+}
+
+.menu-button {
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    user-select: none;
+    color: var(--text-color);
+}
+
+.menu-button:hover, .menu-button.active {
+    background-color: var(--menu-hover-bg-color);
+}
+
+/* MENÚS DESPLEGABLES */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--dropdown-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 5px 0;
+    z-index: 9999;
+    min-width: 240px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: var(--dropdown-text-color);
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+}
+
+.dropdown-item:hover {
+    background-color: var(--dropdown-hover-bg-color);
+    color: var(--dropdown-text-color);
+}
+
+.dropdown-item:hover .shortcut,
+.dropdown-item:hover i {
+    color: var(--dropdown-shortcut-text-color);
+}
+
+.dropdown-item i {
+    margin-right: 12px;
+    width: 18px;
+    text-align: center;
+    color: var(--icon-color);
+}
+
+.dropdown-menu hr {
+    margin: 4px 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.shortcut {
+    color: var(--dropdown-shortcut-text-color);
+    font-size: 12px;
+}
+
+/* SUBMENÚS */
+.dropdown-item.has-submenu {
+    position: relative;
+}
+
+.dropdown-item i.fa-chevron-right {
+    font-size: 10px;
+    color: var(--dropdown-shortcut-text-color);
+    margin-left: auto;
+    padding-left: 15px;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: -6px;
+    left: 100%;
+    background-color: var(--dropdown-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 5px 0;
+    min-width: 220px;
+    z-index: 10000;
+}
+
+.dropdown-item.has-submenu:hover > .submenu {
+    display: block;
+}
+
+.table-grid-submenu {
+    padding: 10px;
+    min-width: auto;
+}
+
+.table-grid-picker {
+    display: grid;
+    grid-template-columns: repeat(10, 20px);
+    gap: 3px;
+}
+
+.table-grid-picker div {
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.table-grid-picker div.highlight {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.table-grid-size {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* VISTA PREVIA DE TEMAS */
+.theme-preview-container {
+    width: 32px;
+    height: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    margin-left: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dropdown-bg-color);
+}
+
+.theme-preview-container > div {
+    width: 28px;
+    height: 20px;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.theme-preview-container > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px; /* Simula una barra de título */
+}
+
+/* Tema Claro */
+.theme-preview-light { background-color: #fff; position: relative; }
+.theme-preview-light::before { background-color: #f8f9fa; }
+.theme-preview-light::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: #555; /* Simula una línea de texto oscuro */
+    top: 10px;
+    left: 5px;
+    border-radius: 1px;
+}
+
+/* Tema Oscuro (Mejorado) */
+.theme-preview-dark { background-color: #3a3a3a; position: relative; }
+.theme-preview-dark::before { background-color: #555; }
+.theme-preview-dark::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: #aaa; /* Simula una línea de texto */
+    top: 10px;
+    left: 5px;
+    border-radius: 1px;
+}
+
+/* Tema Windows XP */
+.theme-preview-xp { background-color: #fff; }
+.theme-preview-xp::before { background: linear-gradient(to right, #0055E4, #3B8CF3); }
+
+/* Tema Aero Linux */
+.theme-preview-aero { background-color: rgba(20, 20, 20, 0.8); border: 1px solid rgba(255,255,255,0.1); }
+.theme-preview-aero::before { background-color: rgba(30, 30, 30, 0.6); }
+
+/* Tema Windows 11 (Mejorado) */
+.theme-preview-win11 {
+    background-color: #f9f9f9; /* Fondo del panel */
+    position: relative;
+}
+.theme-preview-win11::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 8px; /* Ancho del panel lateral */
+    height: 100%;
+    background-color: #0078d4; /* Azul característico */
+}
+
+/* Tema Ayarachi Inca */
+.theme-preview-ayarachi { background-color: #fdf6e3; }
+.theme-preview-ayarachi::before { background-color: #8c5a3b; }
+
+/* BARRA DE HERRAMIENTAS */
+.toolbar {
+    padding: 8px 12px;
+    background-color: var(--editor-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar-button, .toolbar-select {
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-color);
+}
+
+.toolbar-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar-button:hover, .toolbar-select:hover {
+    background-color: var(--menu-hover-bg-color);
+    border-color: var(--border-color);
+}
+
+.toolbar-select option {
+    background-color: var(--dropdown-bg-color);
+    color: var(--dropdown-text-color);
+}
+
+
+.toolbar-button i {
+    font-size: 16px;
+    color: var(--icon-color);
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background-color: var(--separator-color);
+    margin: 0 5px;
+}
+
+.toolbar-color-picker {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.toolbar-color-picker:hover {
+    background-color: var(--menu-hover-bg-color);
+    border-color: var(--border-color);
+}
+
+.toolbar-color-picker input[type="color"] {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* CONTENEDOR PRINCIPAL DEL EDITOR (CON REGLAS) */
+.editor-main-area {
+    position: relative;
+    overflow: hidden; /* Mantenemos los bordes redondeados del contenedor principal */
+    border-radius: 0 0 6px 6px;
+}
+
+.editor-body {
+    display: flex;
+    background-color: var(--bg-color);
+    padding: 20px 0;
+    justify-content: center;
+    overflow: auto;
+    max-height: 70vh;
+}
+/* Cuando el cuerpo del editor tiene una imagen, el editor se vuelve semitransparente */
+.editor-body[style*="background-image"] .editor {
+    background-color: rgba(255, 255, 255, 0.85); /* Blanco semitransparente */
+}
+
+
+/* ESTILOS PARA LAS REGLAS */
+.ruler-h, .ruler-v {
+    background-color: var(--ruler-bg-color);
+    color: var(--ruler-text-color);
+    font-size: 10px;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    background-repeat: repeat;
+}
+
+.ruler-h {
+    height: 25px;
+    border-bottom: 1px solid var(--border-color);
+    background-image:
+        repeating-linear-gradient(to right, var(--ruler-mark-1-color), var(--ruler-mark-1-color) 1px, transparent 1px, transparent 3.78px),
+        repeating-linear-gradient(to right, var(--ruler-mark-2-color), var(--ruler-mark-2-color) 1px, transparent 1px, transparent 18.9px),
+        repeating-linear-gradient(to right, var(--ruler-mark-3-color), var(--ruler-mark-3-color) 1px, transparent 1px, transparent 37.8px);
+    background-repeat: repeat-x;
+    background-position: 25px center, 25px center, 25px center;
+    background-size: auto 4px, auto 7px, auto 12px;
+}
+
+.ruler-v {
+    width: 25px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-color);
+    background-image:
+        repeating-linear-gradient(to bottom, var(--ruler-mark-1-color), var(--ruler-mark-1-color) 1px, transparent 1px, transparent 3.78px),
+        repeating-linear-gradient(to bottom, var(--ruler-mark-2-color), var(--ruler-mark-2-color) 1px, transparent 1px, transparent 18.9px),
+        repeating-linear-gradient(to bottom, var(--ruler-mark-3-color), var(--ruler-mark-3-color) 1px, transparent 1px, transparent 37.8px);
+    background-repeat: repeat-y;
+    background-position: center 0, center 0, center 0;
+    background-size: 4px auto, 7px auto, 12px auto;
+}
+
+.ruler-numbers-h, .ruler-numbers-v {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ruler-numbers-h span, .ruler-numbers-v span {
+    position: absolute;
+    color: var(--ruler-mark-3-color);
+    font-size: 10px;
+}
+
+.ruler-numbers-h span {
+    top: 2px;
+}
+
+.ruler-numbers-v span {
+    left: 4px;
+}
+
+.ruler-h::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; width: 25px; height: 25px;
+    background-color: var(--ruler-bg-color);
+    border-right: 1px solid var(--border-color);
+}
+
+/* Marcadores de Sangría en la Regla */
+.indent-marker {
+    position: absolute;
+    cursor: ew-resize;
+    z-index: 10;
+    background-color: var(--indent-marker-bg-color);
+    border: 1px solid var(--indent-marker-border-color);
+    box-sizing: border-box;
+}
+
+#indent-first-line { top: 1px; width: 14px; height: 10px; clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 100%, 0 50%); transform: translateX(-50%); }
+#indent-hanging { top: 11px; width: 14px; height: 10px; clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%); transform: translateX(-50%); }
+#indent-left { top: 21px; width: 14px; height: 4px; transform: translateX(-50%); }
+#indent-right { top: 1px; width: 14px; height: 10px; clip-path: polygon(0 50%, 50% 0, 100% 50%, 100% 100%, 0 100%); transform: translateX(-50%) rotate(180deg); right: 0; }
+
+/* Marcadores de Margen en la Regla Vertical */
+.margin-marker {
+    position: absolute;
+    cursor: ns-resize;
+    z-index: 10;
+    background-color: var(--indent-marker-bg-color);
+    border: 1px solid var(--indent-marker-border-color);
+    box-sizing: border-box;
+    width: 10px;
+    height: 14px;
+    left: 1px;
+    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+    transform: translateY(-50%);
+}
+
+/* ÁREA DEL EDITOR */
+.editor {
+    padding: 20px;
+    outline: none;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-y: auto;
+    background-color: var(--editor-bg-color);
+    color: var(--text-color);
+    width: 100%;
+    min-height: 400px;
+    box-sizing: border-box;
+    --editor-padding-top: 20px;
+}
+
+.editor.page-view {
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-color);
+    padding: 2.54cm;
+    --editor-padding-top: 2.54cm;
+    box-sizing: content-box;
+    min-height: auto;
+    overflow: hidden;
+}
+
+.editor.page-A4 { width: 21cm; height: 29.7cm; }
+.editor.page-Letter { width: 21.59cm; height: 27.94cm; }
+.editor.page-Legal { width: 21.59cm; height: 35.56cm; }
+.editor.page-A5 { width: 14.8cm; height: 21cm; }
+
+@media print {
+    body { background-color: #fff; }
+    .editor-container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+    .menu-bar, .toolbar, .status-bar, .ruler-h, .ruler-v { display: none; }
+    .editor-body { display: block; padding: 0; max-height: none; }
+    .editor-body { background-image: none !important; }
+    .editor { box-shadow: none; border: none; width: auto; height: auto; overflow: visible; }
+    .editor {
+        background-image: none !important;
+        -webkit-print-color-adjust: exact; /* Necesario en algunos navegadores para forzar estilos */
+        print-color-adjust: exact;
+    }
+}
+
+/* Estilos predefinidos */
+.editor .style-title { font-family: 'Georgia', serif; font-size: 24px; color: #2c3e50; border-bottom: 2px solid #bdc3c7; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px; }
+.editor .style-subtitle { font-family: 'Arial', sans-serif; font-size: 18px; color: #7f8c8d; font-style: italic; }
+.editor .style-code { font-family: 'Courier New', monospace; background-color: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 4px; padding: 10px; display: block; white-space: pre-wrap; }
+
+/* BARRA DE ESTADO */
+.status-bar {
+    padding: 5px 12px;
+    background-color: var(--menu-bg-color);
+    border-top: 1px solid var(--border-color);
+    font-size: 12px;
+    color: var(--dropdown-shortcut-text-color);
+    text-align: right;
+}
+
+/* ESTILOS DEL MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: var(--modal-overlay-bg-color);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--modal-bg-color);
+    width: 80%;
+    max-width: 700px;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--modal-header-bg-color);
+}
+.modal-header h2 { font-size: 16px; margin: 0; color: var(--text-color); }
+
+.close-button {
+    color: #aaa;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.close-button:hover { color: var(--text-color); }
+
+#sourceCodeTextarea {
+    width: 100%;
+    height: 400px;
+    border: none;
+    resize: vertical;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: monospace;
+    font-size: 14px;
+    outline: none;
+    background-color: var(--editor-bg-color);
+    color: var(--text-color);
+}
+
+.modal-footer {
+    padding: 10px 16px;
+    background-color: var(--modal-footer-bg-color);
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-left: 5px;
+    background-color: var(--editor-bg-color);
+    color: var(--text-color);
+}
+.modal-btn.primary {
+    background-color: var(--button-primary-bg-color);
+    color: var(--button-primary-text-color);
+    border-color: var(--button-primary-bg-color);
+}
+
+/* Estilos específicos para el visor de PDF */
+.pdf-viewer-tools {
+    padding: 8px 12px;
+    background-color: var(--modal-header-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pdf-viewer-tools .toolbar-button.active {
+    background-color: var(--menu-hover-bg-color);
+    border: 1px solid var(--border-color);
+}
+
+.pdf-viewer-body {
+    position: relative;
+    flex-grow: 1;
+    overflow: auto;
+    background: #525659;
+    text-align: center;
+    padding: 10px;
+}
+
+.pdf-canvas {
+    /* position: absolute; ya no es necesario con el nuevo contenedor */
+    /* top: 10px; */
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#annotationCanvas {
+    position: absolute; /* El canvas de anotación se superpone */
+    z-index: 1;
+}

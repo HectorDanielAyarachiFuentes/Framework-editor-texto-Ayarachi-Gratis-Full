@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Texto Ayarachi</title>
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:ital,wght@0,400;0,700;1,400&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:ital,wght@0,400;0,700;1,400&family=Tahoma&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+
+    <div class="editor-container">
+        <!-- BARRA DE MENÚ PRINCIPAL -->
+        <div class="menu-bar">
+            <!-- Menú Archivo -->
+            <div class="menu-item">
+                <span class="menu-button">Archivo</span>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-action="newDocument"><div><i class="fa-regular fa-file"></i> Nuevo documento</div></a>
+                    <a href="#" class="dropdown-item" data-action="openFile"><div><i class="fa-regular fa-folder-open"></i> Abrir archivo...</div></a>
+                    <div class="dropdown-item has-submenu">
+                        <div><i class="fa-regular fa-file-lines"></i> Tamaño de página</div><i class="fa-solid fa-chevron-right"></i>
+                        <div class="submenu">
+                            <a href="#" class="dropdown-item" data-action="setPageSize" data-size="A4"><div>A4</div></a>
+                            <a href="#" class="dropdown-item" data-action="setPageSize" data-size="Letter"><div>Carta (Letter)</div></a>
+                            <a href="#" class="dropdown-item" data-action="setPageSize" data-size="Legal"><div>Legal</div></a>
+                            <a href="#" class="dropdown-item" data-action="setPageSize" data-size="A5"><div>A5</div></a>
+                            <hr>
+                            <a href="#" class="dropdown-item" data-action="setPageSize" data-size="auto"><div>Automático (ajustar)</div></a>
+                        </div>
+                    </div>
+                    <a href="#" class="dropdown-item" data-action="setPageBackground"><div><i class="fa-regular fa-image"></i> Imagen de fondo...</div></a>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-action="print">
+                        <div><i class="fa-solid fa-print"></i> Imprimir...</div>
+                        <div class="shortcut">Ctrl+P</div>
+                    </a>
+                </div>
+            </div>
+            <!-- Menú Editar -->
+            <div class="menu-item">
+                <span class="menu-button">Editar</span>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-command="undo"><div><i class="fa-solid fa-undo"></i> Deshacer</div><div class="shortcut">Ctrl+Z</div></a>
+                    <a href="#" class="dropdown-item" data-command="redo"><div><i class="fa-solid fa-redo"></i> Rehacer</div><div class="shortcut">Ctrl+Y</div></a>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-command="cut"><div><i class="fa-solid fa-cut"></i> Cortar</div><div class="shortcut">Ctrl+X</div></a>
+                    <a href="#" class="dropdown-item" data-command="copy"><div><i class="fa-regular fa-copy"></i> Copiar</div><div class="shortcut">Ctrl+C</div></a>
+                    <a href="#" class="dropdown-item" data-command="paste"><div><i class="fa-regular fa-paste"></i> Pegar</div><div class="shortcut">Ctrl+V</div></a>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-command="selectAll"><div><i class="fa-solid fa-check-double"></i> Seleccionar todo</div><div class="shortcut">Ctrl+A</div></a>
+                </div>
+            </div>
+            <!-- Menú Ver -->
+            <div class="menu-item">
+                <span class="menu-button">Ver</span>
+                 <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-action="sourceCode" role="button"><div><i class="fa-solid fa-code"></i> Código fuente</div></a>
+                    <a href="#" class="dropdown-item" data-action="fullscreen" role="button"><div><i class="fa-solid fa-expand"></i> Pantalla completa</div></a>
+                    <hr>
+                    <div class="dropdown-item has-submenu">
+                        <div><i class="fa-solid fa-palette"></i> Temas</div><i class="fa-solid fa-chevron-right"></i>
+                        <div class="submenu">
+                            <a href="#" class="dropdown-item" data-action="setTheme" data-theme="light"><div>Claro (Predeterminado)</div><div class="theme-preview-container"><div class="theme-preview-light"></div></div></a>
+                            <a href="#" class="dropdown-item" data-action="setTheme" data-theme="dark"><div>Oscuro</div><div class="theme-preview-container"><div class="theme-preview-dark"></div></div></a>
+                            <hr>
+                            <a href="#" class="dropdown-item" data-action="setTheme" data-theme="xp"><div>Windows XP</div><div class="theme-preview-container"><div class="theme-preview-xp"></div></div></a>
+                            <a href="#" class="dropdown-item" data-action="setTheme" data-theme="aero"><div>Aero Linux</div><div class="theme-preview-container"><div class="theme-preview-aero"></div></div></a>
+                            <a href="#" class="dropdown-item" data-action="setTheme" data-theme="win11"><div>Windows 11</div><div class="theme-preview-container"><div class="theme-preview-win11"></div></div></a>
+                            <a href="#" class="dropdown-item" data-action="setTheme" data-theme="ayarachi"><div>Ayarachi</div><div class="theme-preview-container"><div class="theme-preview-ayarachi"></div></div></a>
+                        </div>
+                    </div>
+                    <a href="#" class="dropdown-item" data-action="setAppBackground"><div><i class="fa-regular fa-image"></i> Fondo de la aplicación...</div></a>
+                </div>
+            </div>
+            <!-- Menú Insertar -->
+            <div class="menu-item">
+                <span class="menu-button">Insertar</span>
+                <div class="dropdown-menu">
+                     <a href="#" class="dropdown-item" data-action="insertImage"><div><i class="fa-regular fa-image"></i> Imagen...</div></a>
+                    <a href="#" class="dropdown-item" data-action="createLink"><div><i class="fa-solid fa-link"></i> Enlace...</div><div class="shortcut">Ctrl+K</div></a>
+                    <hr>
+                     <a href="#" class="dropdown-item" data-command="insertHorizontalRule"><div><i class="fa-solid fa-minus"></i> Línea horizontal</div></a>
+                </div>
+            </div>
+            <!-- Menú Formato -->
+             <div class="menu-item">
+                <span class="menu-button">Formato</span>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-command="bold"><div><i class="fa-solid fa-bold"></i> Negrita</div><div class="shortcut">Ctrl+B</div></a>
+                    <a href="#" class="dropdown-item" data-command="italic"><div><i class="fa-solid fa-italic"></i> Cursiva</div><div class="shortcut">Ctrl+I</div></a>
+                    <a href="#" class="dropdown-item" data-command="underline"><div><i class="fa-solid fa-underline"></i> Subrayado</div><div class="shortcut">Ctrl+U</div></a>
+                    <a href="#" class="dropdown-item" data-command="strikeThrough"><div><i class="fa-solid fa-strikethrough"></i> Tachado</div></a>
+                    <a href="#" class="dropdown-item" data-command="superscript"><div><i class="fa-solid fa-superscript"></i> Superíndice</div></a>
+                    <a href="#" class="dropdown-item" data-command="subscript"><div><i class="fa-solid fa-subscript"></i> Subíndice</div></a>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-command="removeFormat"><div><i class="fa-solid fa-text-slash"></i> Limpiar formato</div></a>
+                </div>
+            </div>
+            <!-- Menú Estilos -->
+            <div class="menu-item">
+                <span class="menu-button">Estilos</span>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-action="applyStyle" data-style="title"><div>Título Destacado</div></a>
+                    <a href="#" class="dropdown-item" data-action="applyStyle" data-style="subtitle"><div>Subtítulo Gris</div></a>
+                    <a href="#" class="dropdown-item" data-action="applyStyle" data-style="code"><div>Bloque de Código</div></a>
+                </div>
+            </div>
+            <!-- Menú Herramientas -->
+            <div class="menu-item">
+                <span class="menu-button">Herramientas</span>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-action="sourceCode"><div><i class="fa-solid fa-code"></i> Código fuente</div></a>
+                    <a href="#" class="dropdown-item" data-action="wordCount"><div><i class="fa-solid fa-calculator"></i> Contar palabras</div></a>
+                </div>
+            </div>
+            <!-- Menú Tabla -->
+            <div class="menu-item">
+                <span class="menu-button">Tabla</span>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item has-submenu">
+                        <div><i class="fa-solid fa-table-cells"></i> Tabla</div><i class="fa-solid fa-chevron-right"></i>
+                        <div class="submenu table-grid-submenu">
+                            <div class="table-grid-picker" id="tableGridPicker"></div>
+                            <div class="table-grid-size" id="tableGridSize">0x0</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-action="deleteTableRow"><div><i class="fa-solid fa-delete-left"></i> Eliminar fila</div></a>
+                    <a href="#" class="dropdown-item" data-action="deleteTableColumn"><div><i class="fa-solid fa-table-columns"></i> Eliminar columna</div></a>
+                    <hr>
+                    <a href="#" class="dropdown-item" data-action="deleteTable"><div><i class="fa-regular fa-trash-can"></i> Eliminar tabla</div></a>
+                </div>
+            </div>
+            <!-- Menú Ayuda -->
+            <div class="menu-item">
+                <span class="menu-button">Ayuda</span>
+                <div class="dropdown-menu"><a href="#" class="dropdown-item"><div><i class="fa-regular fa-circle-question"></i> Ayuda</div></a></div>
+            </div>
+        </div>
+
+        <!-- BARRA DE HERRAMIENTAS -->
+        <div class="toolbar">
+            <button class="toolbar-button" data-command="undo" title="Deshacer"><i class="fa-solid fa-undo"></i></button>
+            <button class="toolbar-button" data-command="redo" title="Rehacer"><i class="fa-solid fa-redo"></i></button>
+            
+            <select class="toolbar-select" data-command="formatBlock">
+                <option value="p">Párrafo</option>
+                <option value="h1">Encabezado 1</option>
+                <option value="h2">Encabezado 2</option>
+                <option value="h3">Encabezado 3</option>
+            </select>
+            
+            <select class="toolbar-select" data-command="fontName">
+                <option value="Arial">Arial</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Lato">Lato</option>
+            </select>
+
+            <select class="toolbar-select" id="fontSizeSelect">
+                <option value="1">8pt</option>
+                <option value="2">10pt</option>
+                <option value="3" selected>12pt</option>
+                <option value="4">14pt</option>
+                <option value="5">18pt</option>
+                <option value="6">24pt</option>
+                <option value="7">36pt</option>
+            </select>
+
+            <div class="toolbar-separator"></div>
+
+            <div class="toolbar-color-picker" title="Color de texto">
+                <i class="fa-solid fa-font"></i>
+                <input type="color" data-command="foreColor" value="#000000">
+            </div>
+            <div class="toolbar-color-picker" title="Color de resaltado">
+                <i class="fa-solid fa-highlighter"></i>
+                <input type="color" data-command="hiliteColor" value="#FFFFFF">
+            </div>
+
+            <button class="toolbar-button" data-command="bold" title="Negrita"><i class="fa-solid fa-bold"></i></button>
+            <button class="toolbar-button" data-command="italic" title="Cursiva"><i class="fa-solid fa-italic"></i></button>
+            <button class="toolbar-button" data-command="underline" title="Subrayado"><i class="fa-solid fa-underline"></i></button>
+            <button class="toolbar-button" data-command="strikeThrough" title="Tachado"><i class="fa-solid fa-strikethrough"></i></button>
+            <button class="toolbar-button" data-action="createLink" title="Insertar Enlace"><i class="fa-solid fa-link"></i></button>
+            <button class="toolbar-button" data-action="insertImage" title="Insertar Imagen"><i class="fa-regular fa-image"></i></button>
+        </div>
+
+        <!-- CONTENEDOR DEL EDITOR Y LAS REGLAS -->
+        <div class="editor-main-area">
+            <!-- REGLA HORIZONTAL -->
+            <div class="ruler-h">
+                <div class="ruler-numbers-h"></div>
+                <!-- Marcadores de Sangría -->
+                <div id="indent-first-line" class="indent-marker" draggable="true" title="Sangría de primera línea"></div>
+                <div id="indent-hanging" class="indent-marker" draggable="true" title="Sangría francesa"></div>
+                <div id="indent-left" class="indent-marker" draggable="true" title="Sangría izquierda"></div>
+                <div id="indent-right" class="indent-marker" draggable="true" title="Sangría derecha"></div>
+            </div>
+            <div class="editor-body">
+                <!-- REGLA VERTICAL -->
+                <div class="ruler-v">
+                    <div class="ruler-numbers-v"></div>
+                    <!-- Marcadores de Margen -->
+                    <div id="margin-top" class="margin-marker" draggable="true" title="Margen superior"></div>
+                </div>
+                <!-- ÁREA DEL EDITOR -->
+                <div id="editor" class="editor" contenteditable="true">
+                    <p>¡Bienvenido a Ayarachi!</p>
+                </div>
+            </div>
+        </div>
+        <!-- BARRA DE ESTADO -->
+        <div class="status-bar">
+            <span id="wordCountDisplay">0 palabras</span>
+        </div>
+    </div>
+
+    <!-- MODAL PARA EL CÓDIGO FUENTE -->
+    <div id="sourceCodeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Código Fuente</h2>
+                <button id="closeModal" class="close-button">&times;</button>
+            </div>
+            <textarea id="sourceCodeTextarea"></textarea>
+            <div class="modal-footer">
+                <button id="cancelSourceCode" class="modal-btn">Cancelar</button>
+                <button id="saveSourceCode" class="modal-btn primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA VISUALIZAR PDF -->
+    <div id="pdfViewerModal" class="modal">
+        <div class="modal-content" style="width: 90%; max-width: 800px; height: 90vh;">
+            <div class="modal-header">
+                <h2 id="pdfViewerTitle">Visor de PDF</h2>
+                <button id="closePdfViewer" class="close-button">&times;</button>
+            </div>
+            <div class="pdf-viewer-tools">
+                <button id="pdfSelectTool" class="toolbar-button" title="Seleccionar y Mover"><i class="fa-solid fa-mouse-pointer"></i></button>
+                <button id="pdfTextTool" class="toolbar-button" title="Añadir Texto"><i class="fa-solid fa-font"></i></button>
+                <button id="pdfDrawTool" class="toolbar-button" title="Dibujar"><i class="fa-solid fa-pencil"></i></button>
+                <div class="toolbar-color-picker" title="Color del lápiz">
+                    <i class="fa-solid fa-palette"></i>
+                    <input type="color" id="pdfDrawColor" value="#ff0000">
+                </div>
+                <select id="pdfDrawWidth" class="toolbar-select" title="Grosor del lápiz">
+                    <option value="1">Fino</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="5">Grueso</option>
+                </select>
+                <button id="pdfClearPage" class="toolbar-button" title="Borrar página"><i class="fa-solid fa-eraser"></i></button>
+                <div class="toolbar-separator"></div>
+                <button id="pdfZoomOut" class="toolbar-button" title="Alejar"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                <span id="pdfZoomLevel" style="width: 50px; text-align: center; font-size: 14px; color: var(--text-color);">100%</span>
+                <button id="pdfZoomIn" class="toolbar-button" title="Acercar"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <div class="toolbar-separator"></div>
+                <button id="pdfDownload" class="toolbar-button" title="Descargar PDF con anotaciones"><i class="fa-solid fa-download"></i></button>
+            </div>
+            <div class="pdf-viewer-body">
+                <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
+                <canvas id="annotationCanvas" class="pdf-canvas"></canvas>
+            </div>
+            <div class="modal-footer" style="justify-content: center; display: flex; align-items: center; gap: 20px;">
+                <button id="pdfPrevPage" class="modal-btn"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                <span id="pdfPageInfo">Página 0 / 0</span>
+                <button id="pdfNextPage" class="modal-btn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input oculto para abrir archivos -->
+    <input type="file" id="file-opener" style="display: none;" accept=".docx,.doc,.pdf">
+
+    
+    <!-- Biblioteca para leer archivos .docx -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- Biblioteca para leer archivos .pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- Biblioteca para crear y guardar PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Especificar la ruta del worker para PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+</body>
+    <script type="module" src="js/app.js"></script> 
+</html>
