@@ -1,6 +1,6 @@
 // js/modules/ui/tableGrid.js
 import { executeCommand } from '../editor/commands.js';
-import { closeAllMenus } from './menus.js';
+import { closeAllMenus } from './menu.js';
 
 /**
  * Inicializa el selector de cuadrícula para insertar tablas.

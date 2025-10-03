@@ -1,12 +1,12 @@
 // js/modules/editor/actions.js
 import { executeCommand } from './commands.js';
-import { updateWordCount } from '../rulers/wordCount.js';
+import { updateWordCount } from './wordCount.js';
 import { findParentTag, getParagraph } from './utils.js';
 import { openSourceCodeModal } from '../ui/sourceModal.js';
 import { openPdfViewer } from '../ui/pdfViewer.js';
 import { updateMarginMarkersPosition } from '../rulers/marginMarkers.js';
 import { setTheme } from '../ui/theme.js';
-import { closeAllMenus } from '../ui/menus.js';
+import { closeAllMenus } from '../ui/menu.js';
 
 let editor;
 
@@ -48,7 +48,7 @@ const actionHandlers = {
         alert(`Conteo de palabras: ${words.length}\nConteo de caracteres: ${charCount}`);
     },
     deleteTableRow: () => {
-        const row = findParentTag('TR');
+        const row = findParentTag('TR', editor);
         if (row) {
             row.remove();
         } else {
@@ -56,10 +56,10 @@ const actionHandlers = {
         }
     },
     deleteTableColumn: () => {
-        const cell = findParentTag('TD') || findParentTag('TH');
+        const cell = findParentTag('TD', editor) || findParentTag('TH', editor);
         if (cell) {
             const cellIndex = cell.cellIndex;
-            const table = findParentTag('TABLE');
+            const table = findParentTag('TABLE', editor);
             if (table) {
                 for (const row of table.rows) {
                     if (row.cells[cellIndex]) {
@@ -72,7 +72,7 @@ const actionHandlers = {
         }
     },
     deleteTable: () => {
-        const table = findParentTag('TABLE');
+        const table = findParentTag('TABLE', editor);
         if (table && confirm('¿Estás seguro de que quieres eliminar esta tabla?')) {
             table.remove();
         } else if (!table) {
@@ -83,7 +83,7 @@ const actionHandlers = {
         const style = element.dataset.style;
         if (!style) return;
         executeCommand('formatBlock', '<p>');
-        const blockElement = getParagraph();
+        const blockElement = getParagraph(editor);
         if (blockElement) {
             blockElement.classList.toggle(`style-${style}`);
         }

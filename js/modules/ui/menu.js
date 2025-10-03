@@ -1,4 +1,4 @@
-// js/modules/ui/menus.js
+// js/modules/ui/menu.js
 
 let menuButtons;
 

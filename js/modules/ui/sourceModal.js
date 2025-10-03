@@ -1,5 +1,5 @@
 // js/modules/ui/sourceModal.js
-import { updateWordCount } from '../rulers/wordCount.js';
+import { updateWordCount } from '../editor/wordCount.js';
 
 let modal, sourceCodeTextarea, editor;
 
