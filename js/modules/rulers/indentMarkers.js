@@ -7,7 +7,7 @@ let editor;
 let firstLineMarker, hangingMarker, leftMarker, rightMarker;
 
 function updateMarkersPosition() {
-    const p = getParagraph();
+    const p = getParagraph(editor);
     const editorStyle = window.getComputedStyle(editor);
     const editorPaddingLeft = parseFloat(editorStyle.paddingLeft);
     const editorPaddingRight = parseFloat(editorStyle.paddingRight);
@@ -34,7 +34,7 @@ function updateMarkersPosition() {
 
 function startDrag(e) {
     e.preventDefault();
-    const currentParagraph = getParagraph();
+    const currentParagraph = getParagraph(editor);
     if (!currentParagraph) return;
 
     const draggedMarker = e.target;
